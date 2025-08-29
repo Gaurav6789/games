@@ -1,0 +1,195 @@
+
+Type 2
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Alphabet Balloon Game</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: linear-gradient(to top, #87cefa, #e0f7fa); /* initial sky */
+      font-family: Arial, sans-serif;
+      transition: background 1s ease-in-out; /* smooth bg change */
+    }
+    h1 {
+      color: #333;
+      font-size: 28px;
+      margin: 10px;
+    }
+    #score, #level {
+      font-size: 22px;
+      margin: 5px;
+      color: #222;
+    }
+    .balloon {
+      position: absolute;
+      bottom: -100px;
+      width: 70px;
+      height: 90px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      user-select: none;
+    }
+    @keyframes floatUp {
+      from { transform: translateY(0); }
+      to { transform: translateY(-110vh); }
+    }
+    .pop {
+      animation: popAnim 0.3s forwards;
+    }
+    @keyframes popAnim {
+      to { transform: scale(0); opacity: 0; }
+    }
+    .wrong {
+      background: black !important;
+    }
+    .confetti {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+background: linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%);
+      animation: fall 3s linear forwards;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(200vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<script>
+
+</script>
+<body>
+  <h1>Find the Letter: <span id="targetLetter"></span></h1>
+  <div id="score">Score: 0</div>
+  <div id="level">Level: 1</div>
+
+  <audio id="cheer" preload="none">
+    <source src="level-complete-394515.mp3" type="audio/mpeg">
+  </audio>
+
+
+  <script>
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    const target = document.getElementById("targetLetter");
+    const cheer = document.getElementById("cheer");
+    cheer.volume = 1;
+
+    const wrongSound = document.getElementById("wrongSound");
+    const scoreBoard = document.getElementById("score");
+    const levelBoard = document.getElementById("level");
+
+    let score = 0;
+    let level = 1;
+    let currentTarget = letters[Math.floor(Math.random() * letters.length)];
+    target.textContent = currentTarget;
+
+    const colors = ["#e91e63","#ff9800","#4caf50","#2196f3","#9c27b0","#ffeb3b"];
+
+    // 🎨 backgrounds for different levels
+    const backgrounds = [
+      "linear-gradient(to top, #87cefa, #e0f7fa)",   // Sky blue
+      "linear-gradient(to top, #ffcc80, #ffe0b2)",   // Sunny orange
+      "linear-gradient(to top, #a5d6a7, #e8f5e9)",   // Green ground
+      "linear-gradient(to top, #ce93d8, #f3e5f5)",   // Purple-pink
+      "linear-gradient(to top, #90caf9, #e3f2fd)"    // Light blue
+    ];
+
+    function updateBackground() {
+      const bg = backgrounds[(level - 1) % backgrounds.length];
+      document.body.style.background = bg;
+    }
+
+    function createBalloon(letter, posX) {
+      const balloon = document.createElement("div");
+      balloon.className = "balloon";
+      balloon.textContent = letter;
+      balloon.style.left = posX + "px";
+      balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+      const speed = Math.max(3, 10 - level);  
+      balloon.style.animation = `floatUp ${speed}s linear forwards`;
+
+      balloon.onclick = () => {
+        if (letter === currentTarget) {
+          balloon.classList.add("pop");
+          cheer.currentTime = 0; // Restart audio if needed
+          cheer.play();
+           confettiBurst();
+          score++;
+          scoreBoard.textContent = "Score: " + score;
+
+          // Level up every 7 points
+          if (score % 7 === 0) {
+            level++;
+            levelBoard.textContent = "Level: " + level;
+            updateBackground();   // 🔥 change background
+          }
+
+          setTimeout(() => balloon.remove(), 300);
+
+          currentTarget = letters[Math.floor(Math.random() * letters.length)];
+          target.textContent = currentTarget;
+        } else {
+          balloon.classList.add("wrong");
+          wrongSound.play();
+          setTimeout(() => balloon.remove(), 500);
+          score = Math.max(0, score - 1);
+          scoreBoard.textContent = "Score: " + score;
+        }
+      };
+
+      document.body.appendChild(balloon);
+      setTimeout(() => balloon.remove(), speed * 1000);
+    }
+
+    function spawnBatch() {
+      const width = window.innerWidth - 100;
+      const balloonCount = Math.random() < 0.5 ? 1 : 2;
+
+      let positions = [];
+      for (let i = 0; i < balloonCount; i++) {
+        let pos;
+        do {
+          pos = Math.random() * width;
+        } while (positions.some(p => Math.abs(p - pos) < 120));
+        positions.push(pos);
+
+        const letter = (i === 0) ? currentTarget : letters[Math.floor(Math.random() * letters.length)];
+        createBalloon(letter, pos);
+      }
+    }
+
+    function confettiBurst() {
+      for (let i = 0; i < 20; i++) {
+        let confetti = document.createElement("div");
+        confetti.className = "confetti";
+        confetti.style.left = Math.random() * window.innerWidth + "px";
+        confetti.style.background = `hsl(${Math.random() * 360},100%,50%)`;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 2000);
+      }
+    }
+
+    setInterval(spawnBatch, 2500);
+  </script>
+</body>
+</html>

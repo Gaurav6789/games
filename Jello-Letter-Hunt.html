@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Jello Letter Hunt - Leveled</title>
+<style>
+body {
+  margin: 0;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  background: linear-gradient(135deg, #ffe4e1, #ffd1dc);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+h1 {
+  color: #ff3c7d;
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+#info { text-align:center; margin-bottom:15px; }
+#level, #score, #hint { font-size:1.2em; font-weight:bold; margin:4px; }
+#wordDisplay { font-size: 2em; letter-spacing: 12px; margin: 10px 0; }
+
+#gameArea {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  height: 400px;
+  margin-top: 20px;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.jello {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+  position: absolute;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  transition: transform 0.3s, background 0.3s;
+}
+
+.letter-hidden { color: transparent; }
+.letter-revealed { color: white; font-weight:bold; }
+
+@keyframes wobble1 {
+  0%,100%{transform:scale(1);}
+  25%{transform:scale(1.05,0.95);}
+  50%{transform:scale(0.95,1.05);}
+  75%{transform:scale(1.05,1.05);}
+}
+@keyframes wobble2 {
+  0%,100%{transform:scale(1);}
+  25%{transform:rotate(-5deg);}
+  50%{transform:rotate(5deg);}
+  75%{transform:rotate(-3deg);}
+}
+</style>
+</head>
+<body>
+<h1>🍮 Jello Letter Hunt</h1>
+<div id="info">
+  <div id="level">Level: 1</div>
+  <div id="score">Correct Words: 0</div>
+  <div id="hint">Hint: ???</div>
+</div>
+<div id="wordDisplay"></div>
+<div id="gameArea"></div>
+<button id="resetBtn">🔄 Play Again</button>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+const allWords = [
+  "CAT","DOG","SUN","BEE","FOX","PIG","HAT","CUP","BAG","CAR",
+  "FISH","LION","TREE","BALL","MOON","STAR","FROG","DUCK","PANDA","KITE",
+  "APPLE","GRAPE","HOUSE","JUICE","ORANGE","RABBIT","WATER","YACHT","SMILE","BERRY",
+  "MONKEY","GUITAR","UMBRELLA","TUNNEL","MARKER","BOTTLE","FLOWER","BRIDGE","SCHOOL","CANDLE",
+  "COOKIE","POCKET","PUZZLE","WINDOW","BOTTLE","FLOWER","MONKEY","RABBIT","ORANGE","APPLE"
+];
+
+let currentWord = "";
+let revealed = [];
+let correctCount = 0;
+let level = 1;
+
+const levelSettings = {
+  1:{letters:3, color:["#ff6b6b","#ff3b5f"], anim:"wobble1"},
+  2:{letters:4, color:["#6bd46b","#2fb24f"], anim:"wobble2"},
+  3:{letters:5, color:["#ffb347","#ff8a00"], anim:"wobble1"},
+  4:{letters:6, color:["#6bd6ff","#2b9cff"], anim:"wobble2"}
+};
+
+const gameArea = document.getElementById('gameArea');
+const wordDisplay = document.getElementById('wordDisplay');
+const hintEl = document.getElementById('hint');
+const levelEl = document.getElementById('level');
+const scoreEl = document.getElementById('score');
+const resetBtn = document.getElementById('resetBtn');
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function getWordForLevel(){
+  const levelInfo = levelSettings[level] || levelSettings[4];
+  const wordPool = allWords.filter(w=>w.length===levelInfo.letters);
+  return wordPool[Math.floor(Math.random()*wordPool.length)].toUpperCase();
+}
+
+function getRandomPosition(existingPositions){
+  const maxX = gameArea.clientWidth - 90;
+  const maxY = gameArea.clientHeight - 90;
+  let x, y, attempts = 0;
+  do {
+    x = Math.random()*maxX;
+    y = Math.random()*maxY;
+    attempts++;
+  } while (existingPositions.some(pos => Math.abs(pos.x - x)<50 && Math.abs(pos.y - y)<50) && attempts<100);
+  return {x,y};
+}
+
+function startGame(){
+  level = Math.min(Math.floor(correctCount/5)+1, 4);
+  levelEl.textContent = "Level: "+level;
+
+  currentWord = getWordForLevel();
+  revealed = Array(currentWord.length).fill("_");
+  wordDisplay.textContent = revealed.join(" ");
+
+  // ✅ hint shows the actual word
+  hintEl.textContent = `Hint: ${currentWord}`;
+  setTimeout(()=>{ hintEl.textContent = ""; }, 3000); // disappear after 3s
+
+  gameArea.innerHTML = "";
+  const levelInfo = levelSettings[level];
+  const letters = shuffle([...currentWord.split(""), ...getRandomLetters(10)]);
+
+  const positions = [];
+
+  letters.forEach(letter=>{
+    const blob = document.createElement("div");
+    blob.className = `jello letter-hidden`;
+    blob.style.background = `linear-gradient(${levelInfo.color[0]}, ${levelInfo.color[1]})`;
+    blob.style.animation = `${levelInfo.anim} 1.5s infinite`;
+    blob.style.zIndex = Math.floor(Math.random()*100);
+    blob.textContent = letter;
+
+    const pos = getRandomPosition(positions);
+    blob.style.left = pos.x + "px";
+    blob.style.top = pos.y + "px";
+    positions.push(pos);
+
+    blob.onclick = ()=>revealLetter(blob, letter);
+    gameArea.appendChild(blob);
+  });
+}
+
+function getRandomLetters(count){
+  const alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return Array.from({length:count},()=>alphabet[Math.floor(Math.random()*alphabet.length)]);
+}
+
+function revealLetter(blob, letter){
+  if(blob.classList.contains("letter-revealed")) return;
+  blob.classList.remove("letter-hidden");
+  blob.classList.add("letter-revealed");
+  blob.style.background="#555";
+
+  for(let i=0;i<currentWord.length;i++){
+    if(currentWord[i]===letter && revealed[i]==="_"){
+      revealed[i]=letter;
+      break;
+    }
+  }
+  wordDisplay.textContent = revealed.join(" ");
+  if(revealed.join("")===currentWord){
+    correctCount++;
+    scoreEl.textContent = "Correct Words: "+correctCount;
+    setTimeout(()=>{cheer(); confettiBurst(); startGame();},300);
+  }
+}
+
+function cheer(){
+  const audio=new Audio("https://www.fesliyanstudios.com/play-mp3/387");
+  audio.play();
+}
+
+function confettiBurst(){
+  confetti({
+    particleCount:120,
+    spread:90,
+    origin:{y:0.6}
+  });
+}
+
+resetBtn.onclick = ()=>{
+  correctCount=0;
+  startGame();
+}
+
+startGame();
+</script>
+</body>
+</html>

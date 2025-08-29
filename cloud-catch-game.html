@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alphabet Cloud Catch</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #87CEFA, #E0FFFF);
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    transition: background 0.8s;
+  }
+
+  .game {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #074f6b;
+    text-shadow: 2px 2px 6px #a0e0ff;
+  }
+
+  #emoji {
+    font-size: 80px;
+    margin-bottom: 20px;
+  }
+
+  #wordBox {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .letter-box {
+    width: 50px;
+    height: 50px;
+    background: #ffffffcc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 24px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+
+  #clouds {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+  }
+
+  .cloud {
+    position: absolute;
+    top: 0;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+  }
+
+  .cloud:hover {
+    transform: scale(1.1);
+  }
+
+  .controls {
+    margin-top: 20px;
+  }
+
+  button {
+    padding: 10px 16px;
+    font-size: 16px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  #hintBtn { background: #ffb347; color: #fff; }
+  #refillBtn { background: #00a3a3; color: #fff; display: none; }
+
+  #hintDisplay {
+    margin-top: 12px;
+    font-weight: bold;
+    color: #074f6b;
+    min-height: 24px;
+  }
+
+  /* Confetti */
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 520px){
+    h1 { font-size: 1.5rem; }
+    #emoji { font-size: 60px; }
+    .letter-box { width: 40px; height: 40px; font-size: 20px; }
+    .cloud { font-size: 20px; padding: 8px 16px; }
+    button { font-size: 14px; padding: 8px 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="game">
+  <h1>Alphabet Cloud Catch</h1>
+  <div id="emoji">🍎</div>
+  <div id="wordBox"></div>
+  <div id="clouds"></div>
+
+  <div class="controls">
+    <button id="hintBtn">Show Hint</button>
+    <button id="refillBtn">Refill</button>
+  </div>
+  <div id="hintDisplay"></div>
+
+  <audio id="cheer" preload="none">
+    <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" type="audio/ogg">
+    <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.mp3" type="audio/mpeg">
+  </audio>
+</div>
+
+<script>
+const words = [
+  {word:"APPLE", emoji:"🍎"}, {word:"BALL", emoji:"⚽"}, {word:"CAT", emoji:"🐱"},
+  {word:"DOG", emoji:"🐶"}, {word:"FISH", emoji:"🐟"}, {word:"GRAPE", emoji:"🍇"},
+  {word:"HOUSE", emoji:"🏠"}, {word:"ORANGE", emoji:"🍊"}, {word:"SUN", emoji:"☀️"},
+  {word:"TREE", emoji:"🌳"}, {word:"MONKEY", emoji:"🐵"}, {word:"PANDA", emoji:"🐼"},
+  {word:"LION", emoji:"🦁"}, {word:"RABBIT", emoji:"🐇"}, {word:"QUEEN", emoji:"👑"},
+  {word:"YAK", emoji:"🐂"}, {word:"ZEBRA", emoji:"🦓"}, {word:"ICE", emoji:"🧊"},
+  {word:"JUICE", emoji:"🧃"}, {word:"KITE", emoji:"🪁"}, {word:"UMBRELLA", emoji:"☂️"},
+  {word:"VIOLIN", emoji:"🎻"}, {word:"WATER", emoji:"💧"}, {word:"XYLOPHONE", emoji:"🎼"},
+  {word:"ELEPHANT", emoji:"🐘"}, {word:"GUITAR", emoji:"🎸"}, {word:"MOUSE", emoji:"🐭"},
+  {word:"BEE", emoji:"🐝"}, {word:"OWL", emoji:"🦉"}, {word:"CUP", emoji:"☕"},
+  {word:"CAR", emoji:"🚗"}, {word:"HAT", emoji:"🎩"}, {word:"BOOK", emoji:"📚"},
+  {word:"PEN", emoji:"🖊️"}, {word:"FOOT", emoji:"🦶"}, {word:"HAND", emoji:"✋"},
+  {word:"EAR", emoji:"👂"}, {word:"NOSE", emoji:"👃"}, {word:"FORK", emoji:"🍴"},
+  {word:"SPOON", emoji:"🥄"}, {word:"CHAIR", emoji:"🪑"}, {word:"TABLE", emoji:"🛋️"},
+  {word:"CLOCK", emoji:"⏰"}, {word:"BAG", emoji:"👜"}, {word:"KEY", emoji:"🔑"},
+  {word:"DOOR", emoji:"🚪"}, {word:"RING", emoji:"💍"}, {word:"CANDLE", emoji:"🕯️"},
+  {word:"BALLOON", emoji:"🎈"}, {word:"FLAG", emoji:"🚩"}, {word:"STAR", emoji:"⭐"}
+];
+
+let currentWord = "";
+let filled = [];
+const cloudsDiv = document.getElementById('clouds');
+const wordBoxDiv = document.getElementById('wordBox');
+const emojiDiv = document.getElementById('emoji');
+const cheer = document.getElementById('cheer');
+const body = document.body;
+
+const backgrounds = [
+  "linear-gradient(to bottom, #87CEFA, #E0FFFF)",
+  "linear-gradient(to bottom, #FFFACD, #FAF0E6)",
+  "linear-gradient(to bottom, #E6E6FA, #F0FFF0)",
+  "linear-gradient(to bottom, #FFE4E1, #FFF0F5)",
+  "linear-gradient(to bottom, #F0FFF0, #F5FFFA)"
+];
+let bgIndex = 0;
+
+function startGame() {
+  const pick = words[Math.floor(Math.random()*words.length)];
+  currentWord = pick.word;
+  emojiDiv.textContent = pick.emoji;
+
+  wordBoxDiv.innerHTML = "";
+  filled = [];
+  for(let i=0;i<currentWord.length;i++){
+    const box = document.createElement('div');
+    box.className = 'letter-box';
+    box.dataset.index = i;
+    box.textContent = "";
+    wordBoxDiv.appendChild(box);
+    filled.push("");
+  }
+
+  renderClouds();
+  hideRefill();
+}
+
+function renderClouds() {
+  cloudsDiv.innerHTML = "";
+  const letters = shuffle(currentWord.split(''));
+  letters.forEach((l,i)=>{
+    const cloud = document.createElement('div');
+    cloud.className = 'cloud';
+    cloud.textContent = l;
+    cloud.style.top = Math.random()*150 + "px";
+    cloud.style.left = Math.random()*80 + "%";
+    cloud.onclick = () => handleClickLetter(l, cloud);
+    cloudsDiv.appendChild(cloud);
+    animateCloud(cloud);
+  });
+}
+
+function animateCloud(el){
+  let left = parseFloat(el.style.left);
+  let direction = Math.random()>0.5?1:-1;
+  const speed = 0.2 + Math.random()*0.2;
+  function move(){
+    left += speed*direction;
+    if(left<0) direction=1;
+    if(left>80) direction=-1;
+    el.style.left = left + "%";
+    requestAnimationFrame(move);
+  }
+  move();
+}
+
+function handleClickLetter(letter, el){
+  el.remove();
+  const emptyIndex = filled.indexOf("");
+  filled[emptyIndex] = letter;
+  document.querySelector(`.letter-box[data-index="${emptyIndex}"]`).textContent = letter;
+
+  if(filled.join('')===currentWord){
+    cheer.play().catch(()=>{});
+    confettiBurst();
+    bgIndex = (bgIndex+1)%backgrounds.length;
+    body.style.background = backgrounds[bgIndex];
+    setTimeout(startGame, 800);
+  } else if(!filled.includes("")){
+    showRefill();
+  }
+}
+
+function showRefill(){
+  document.getElementById('refillBtn').style.display = 'inline-block';
+  document.getElementById('hintDisplay').textContent = "Oops! Incorrect. Tap Refill.";
+}
+
+function hideRefill(){
+  document.getElementById('refillBtn').style.display = 'none';
+  document.getElementById('hintDisplay').textContent = "";
+}
+
+document.getElementById('refillBtn').addEventListener('click', ()=>{
+  filled = filled.map(()=> "");
+  document.querySelectorAll('.letter-box').forEach(b=> b.textContent="");
+  renderClouds();
+  hideRefill();
+});
+
+document.getElementById('hintBtn').addEventListener('click', ()=>{
+  const hintDiv = document.getElementById('hintDisplay');
+  hintDiv.textContent = `Hint: ${currentWord}`;
+  setTimeout(()=> hintDiv.textContent="", 3000);
+});
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function confettiBurst(){
+  for(let i=0;i<30;i++){
+    const c = document.createElement('div');
+    c.className='confetti';
+    c.style.background = `hsl(${Math.random()*360},80%,60%)`;
+    c.style.left = Math.random()*100 + "%";
+    c.style.top = "0px";
+    document.querySelector('.game').appendChild(c);
+    const duration = 1500 + Math.random()*500;
+    c.animate([{transform:'translateY(0px)'},{transform:`translateY(${window.innerHeight}px)`}], {duration:duration, easing:'ease-out'});
+    setTimeout(()=>c.remove(), duration);
+  }
+}
+
+startGame();
+</script>
+</body>
+</html>

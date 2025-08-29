@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Beach Ball Alphabet Toss</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --accent:#ff7b00;
+      --card:#fff9e6;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:system-ui,Segoe UI,Roboto,Arial;
+      background: linear-gradient(180deg,#77d1ff 0%, #bfefff 30%, #fff7d6 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .game {
+      width:100%;
+      max-width:900px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+      border-radius:16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      padding:20px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    header {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .title {
+      font-size:1.6rem;
+      font-weight:700;
+      color:#074f6b;
+    }
+    .subtitle {
+      color:#0b687e;
+      opacity:.9;
+      font-size:.95rem;
+    }
+
+    .top-row{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      margin-bottom:14px;
+      flex-direction: column;
+      position:relative;
+    }
+
+    /* beach ball */
+    .ball {
+      width:72px;
+      height:72px;
+      border-radius:50%;
+      background: conic-gradient(#ff4d4d 0 30%, #fff 30% 60%, #35c1ff 60% 85%, #fff 85% 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:34px;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.15);
+      position:absolute;
+      left:0px;
+      top:0px;
+      z-index:40;
+      transition: transform .35s ease, left .35s ease, top .35s ease;
+      pointer-events:none;
+    }
+
+    /* word boxes */
+    #image {
+      font-size:80px;
+      text-align:center;
+      margin-bottom:10px;
+    }
+    #wordBox{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      padding:6px 12px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+    .letter-box{
+      width:48px;
+      height:48px;
+      border-radius:8px;
+      background:var(--card);
+      border:2px solid rgba(3,59,82,.08);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      font-size:20px;
+      color:#063645;
+    }
+
+    /* letters area */
+    #letters{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      flex-wrap:wrap;
+      padding:12px;
+      margin-bottom:10px;
+    }
+    .letter{
+      user-select:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:48px;
+      height:48px;
+      padding:6px 10px;
+      border-radius:10px;
+      background:linear-gradient(180deg,#06a7d9,#048fb6);
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:0 6px 12px rgba(3,59,82,.12);
+      transition: transform .12s ease;
+      font-size:18px;
+    }
+    .letter:active{ transform: scale(.95) }
+
+    /* controls */
+    .controls{
+      display:flex;
+      gap:8px;
+      justify-content:center;
+      margin-top:6px;
+      align-items:center;
+    }
+    button{
+      border:0;
+      background:var(--accent);
+      color:white;
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:0 6px 12px rgba(0,0,0,0.12);
+    }
+    #refillBtn{ background:#00a3a3; display:none; }
+    #hintBtn{ background:#ffb347; }
+
+    #hintDisplay{
+      text-align:center;
+      margin-top:10px;
+      min-height:22px;
+      color:#074f6b;
+      font-weight:700;
+    }
+
+    .message {
+      position:absolute;
+      right:18px;
+      top:18px;
+      background:rgba(255,255,255,0.9);
+      padding:8px 12px;
+      border-radius:10px;
+      box-shadow:0 6px 12px rgba(0,0,0,0.06);
+      color:#074f6b;
+      font-weight:700;
+    }
+
+    @media (max-width:520px){
+      .ball{ left:10px; width:60px; height:60px; font-size:28px; }
+      .letter{ min-width:44px; height:44px; font-size:16px; }
+      #image{ font-size:60px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="game" role="application" aria-label="Beach Ball Alphabet Toss game">
+    <header>
+      <div>
+        <div class="title">Beach Ball Alphabet Toss</div>
+        <div class="subtitle">Toss the beach ball to the letters to build the word!</div>
+      </div>
+      <div class="message" id="scoreMsg">Round: 1</div>
+    </header>
+
+    <div class="top-row">
+      <div id="image" aria-hidden="true">🏖️</div>
+      <!-- ball element (animated) -->
+      <div class="ball" id="ball" aria-hidden="true">⚽</div>
+    </div>
+
+    <div id="wordBox" aria-live="polite"></div>
+    <div id="letters" aria-label="Available letters"></div>
+
+    <div class="controls">
+      <button id="hintBtn" type="button">Show Hint</button>
+      <button id="refillBtn" type="button">Refill Letters</button>
+    </div>
+    <div id="hintDisplay" aria-live="polite"></div>
+
+    <audio id="cheer" preload="none">
+      <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" type="audio/ogg">
+      <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <script>
+    const words = {
+      A: { word: "APPLE", emoji: "🍎" }, B: { word: "BALL", emoji: "🏐" }, C: { word: "CAT", emoji: "🐱" },
+      D: { word: "DOG", emoji: "🐶" }, E: { word: "ELEPHANT", emoji: "🐘" }, F: { word: "FISH", emoji: "🐟" },
+      G: { word: "GRAPE", emoji: "🍇" }, H: { word: "HOUSE", emoji: "🏠" }, I: { word: "ICE", emoji: "🧊" },
+      J: { word: "JUICE", emoji: "🧃" }, K: { word: "KITE", emoji: "🪁" }, L: { word: "LION", emoji: "🦁" },
+      M: { word: "MONKEY", emoji: "🐵" }, N: { word: "NEST", emoji: "🪹" }, O: { word: "ORANGE", emoji: "🍊" },
+      P: { word: "PANDA", emoji: "🐼" }, Q: { word: "QUEEN", emoji: "👑" }, R: { word: "RABBIT", emoji: "🐇" },
+      S: { word: "SUN", emoji: "☀️" }, T: { word: "TREE", emoji: "🌳" }, U: { word: "UMBRELLA", emoji: "☂️" },
+      V: { word: "VIOLIN", emoji: "🎻" }, W: { word: "WATER", emoji: "💧" }, X: { word: "XYLOPHONE", emoji: "🎼" },
+      Y: { word: "YAK", emoji: "🐂" }, Z: { word: "ZEBRA", emoji: "🦓" }
+    };
+
+    let currentWord = "", filled = [], round = 1;
+    const ball = document.getElementById('ball');
+    const cheer = document.getElementById('cheer');
+    let ballOrigin = { left:0, top:0 };
+
+    function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a; }
+
+    function pickRandomWord() {
+      const letters = Object.keys(words);
+      const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+      return words[randomLetter];
+    }
+
+    function startGame() {
+      const chosen = pickRandomWord();
+      currentWord = chosen.word;
+      document.getElementById('image').textContent = chosen.emoji;
+      document.getElementById('scoreMsg').textContent = `Round: ${round}`;
+
+      const wordBox = document.getElementById('wordBox');
+      wordBox.innerHTML = '';
+      filled = [];
+      for (let i = 0; i < currentWord.length; i++) {
+        const box = document.createElement('div');
+        box.className = 'letter-box';
+        box.dataset.index = i;
+        wordBox.appendChild(box);
+        filled.push('');
+      }
+
+      renderLetters();
+      hideRefill();
+      setBallToOrigin();
+    }
+
+    function renderLetters() {
+      const lettersDiv = document.getElementById('letters');
+      lettersDiv.innerHTML = '';
+      const letterPool = shuffle(currentWord.split(''));
+      letterPool.forEach(l => {
+        const span = document.createElement('span');
+        span.className = 'letter';
+        span.textContent = l;
+        span.onclick = () => handleLetterClick(l, span);
+        lettersDiv.appendChild(span);
+      });
+    }
+
+    function setBallToOrigin(){
+      const imageRect = document.getElementById('image').getBoundingClientRect();
+      const gameRect = document.querySelector('.game').getBoundingClientRect();
+      const left = gameRect.left + 20 + window.scrollX;
+      const top = imageRect.bottom - gameRect.top + 70;
+      ball.style.left = left + 'px';
+      ball.style.top = top + 'px';
+      ballOrigin.left = left;
+      ballOrigin.top = top;
+    }
+
+    function animateBallTo(targetEl){
+      return new Promise(resolve => {
+        ball.style.display = 'block';
+        const targetRect = targetEl.getBoundingClientRect();
+        const ballRect = ball.getBoundingClientRect();
+        const pageX = targetRect.left + targetRect.width/2 + window.scrollX ;
+        const pageY = targetRect.top + targetRect.height/2 + window.scrollY ;
+        ball.style.left = (pageX - ballRect.width/2) + 'px';
+        ball.style.top = (pageY - ballRect.height/2 - 12) + 'px';
+        ball.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+          ball.style.left = ballOrigin.left + 'px';
+          ball.style.top = ballOrigin.top + 'px';
+          ball.style.transform = 'scale(1)';
+          setTimeout(()=>resolve(), 400);
+        }, 380);
+      });
+    }
+
+    async function handleLetterClick(letter, el) {
+      disableLetters(true);
+      await animateBallTo(el);
+      placeLetter(letter, el);
+      disableLetters(false);
+    }
+
+    function placeLetter(letter, el){
+      const emptyIndex = filled.indexOf('');
+      if(emptyIndex===-1) return;
+      filled[emptyIndex] = letter;
+      document.querySelector(`.letter-box[data-index="${emptyIndex}"]`).textContent = letter;
+      el.remove();
+      if(filled.join('')===currentWord){
+        setTimeout(()=>{ try{ cheer.currentTime=0; cheer.play(); } catch(e){} round++; confettiBurst(); setTimeout(startGame,700); }, 250);
+      } else if(!filled.includes('')) showRefill();
+    }
+
+    function disableLetters(disabled){
+      document.querySelectorAll('.letter').forEach(it=>{
+        if(disabled){ it.style.pointerEvents='none'; it.setAttribute('aria-disabled','true'); }
+        else { it.style.pointerEvents='auto'; it.removeAttribute('aria-disabled'); }
+      });
+    }
+
+    function showRefill(){
+      document.getElementById('refillBtn').style.display='inline-block';
+      document.getElementById('hintDisplay').textContent="Oops — word incorrect. Tap Refill to try again!";
+    }
+
+    function hideRefill(){
+      document.getElementById('refillBtn').style.display='none';
+      document.getElementById('hintDisplay').textContent='';
+    }
+
+    document.getElementById('refillBtn').addEventListener('click', ()=>{
+      document.querySelectorAll('.letter-box').forEach(b=>b.textContent='');
+      filled = filled.map(()=> '');
+      renderLetters();
+      hideRefill();
+    });
+
+    function confettiBurst(){
+      for(let i=0;i<26;i++){
+        const c=document.createElement('div');
+        c.style.position='absolute';
+        c.style.left=Math.random()*80+'%';
+        c.style.top='-10px';
+        c.style.width=c.style.height=(8+Math.random()*12)+'px';
+        c.style.borderRadius='50%';
+        c.style.background=`hsl(${Math.random()*360},80%,55%)`;
+        c.style.opacity='0.95';
+        c.style.pointerEvents='none';
+        c.style.transform='translateY(0)';
+        c.style.transition=`transform ${1.6+Math.random()*0.6}s cubic-bezier(.2,.9,.2,1), opacity .8s`;
+        document.querySelector('.game').appendChild(c);
+        setTimeout(()=>{ c.style.transform=`translateY(${120+Math.random()*80}vh) rotate(${Math.random()*720}deg)`; c.style.opacity='0'; },30+Math.random()*200);
+        setTimeout(()=>c.remove(),2200+Math.random()*800);
+      }
+    }
+
+    document.getElementById('hintBtn').addEventListener('click', ()=>{
+      const hintDisplay=document.getElementById('hintDisplay');
+      hintDisplay.textContent=`Hint: ${currentWord}`;
+      let timeLeft=3;
+      const timer=setInterval(()=>{
+        timeLeft--;
+        if(timeLeft>0) hintDisplay.textContent=`Hint: ${currentWord} (disappears in ${timeLeft}s)`;
+        else { hintDisplay.textContent=''; clearInterval(timer); }
+      },1000);
+    });
+
+    window.addEventListener('resize', ()=>{ setTimeout(setBallToOrigin,120); });
+
+    setTimeout(()=>{
+      setBallToOrigin();
+      startGame();
+    },50);
+  </script>
+</body>
+</html>

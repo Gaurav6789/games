@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Emoji Learning Game: Alphabet Levels A–Z</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f0f9ff;
+      font-family: 'Comic Sans MS', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    #level {
+      font-size: 2em;
+      margin-bottom: 10px;
+      color: #333;
+      text-shadow: 1px 1px 2px #aaa;
+    }
+    #message {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #333;
+      text-shadow: 1px 1px 2px #aaa;
+    }
+    .emoji-btn {
+      font-size: 80px;
+      margin: 15px;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+      border: 4px solid transparent;
+      border-radius: 8px;
+      display: inline-block;
+      padding: 10px;
+    }
+    .emoji-btn:hover {
+      transform: scale(1.2);
+      border-color: #8bc34a;
+    }
+    #options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body  id="game">
+  <div>
+    <div id="level">Level 1 – Letter A</div>
+    <div id="message">Find and click the apple (🍎)!</div>
+    <div id="options"></div>
+  </div>
+
+  <audio id="cheer" preload="none">
+    <source src="collect-points-190037.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+        const game = document.getElementById("game");
+        const cheer = document.getElementById("cheer");
+        cheer.volume = 1;
+    
+    const levels = [
+      { letter: 'A', prompt: 'Find and click the apple (🍎)!', options: ['🍎','🍌','🍇','🍊'], correct: 'apple' },
+      { letter: 'B', prompt: 'Find and click the banana (🍌)!', options: ['🍌','🍎','🍇','🍊'], correct: 'banana' },
+      { letter: 'C', prompt: 'Find and click the cat (🐱)!', options: ['🐱','🐶','🐭','🐰'], correct: 'cat' },
+      { letter: 'D', prompt: 'Find and click the dog (🐶)!', options: ['🐶','🐱','🐭','🐰'], correct: 'dog' },
+      { letter: 'E', prompt: 'Find and click the egg (🥚)!', options: ['🥚','🍳','🍞','🥖'], correct: 'egg' },
+      { letter: 'F', prompt: 'Find and click the flowers (💐)!', options: ['💐','🌹','🌻','🌷'], correct: 'flowers' },
+      { letter: 'G', prompt: 'Find and click the grapes (🍇)!', options: ['🍇','🍉','🍓','🍒'], correct: 'grapes' },
+      { letter: 'H', prompt: 'Find and click the horse (🐴)!', options: ['🐴','🐎','🦄','🐂'], correct: 'horse' },
+      { letter: 'I', prompt: 'Find and click the ice cream (🍨)!', options: ['🍨','📖','🪑','💻'], correct: 'icecream' },
+      { letter: 'J', prompt: 'Find and click the juice (🥤)!', options: ['🥤','🍎','🍌','🍇'], correct: 'juice' },
+      { letter: 'K', prompt: 'Find and click the kite (🪁)!', options: ['🪁','🐱','🐶','🐭'], correct: 'kite' },
+      { letter: 'L', prompt: 'Find and click the lion (🦁)!', options: ['🦁','🐯','🐱','🐶'], correct: 'lion' },
+      { letter: 'M', prompt: 'Find and click the monkey (🐒)!', options: ['🐒','🐵','🐶','🐱'], correct: 'monkey' },
+      { letter: 'N', prompt: 'Find and click the notebook (📓)!', options: ['📓','📖','📚','📒'], correct: 'notebook' },
+      { letter: 'O', prompt: 'Find and click the octopus (🐙)!', options: ['🐙','🐠','🐡','🐟'], correct: 'octopus' },
+      { letter: 'P', prompt: 'Find and click the pizza (🍕)!', options: ['🍕','🍔','🍟','🌭'], correct: 'pizza' },
+      { letter: 'Q', prompt: 'Find and click the queen (👸)!', options: ['👸','🤴','👑','🤴'], correct: 'queen' },
+      { letter: 'R', prompt: 'Find and click the rabbit (🐰)!', options: ['🐰','🐇','🐱','🐶'], correct: 'rabbit' },
+      { letter: 'S', prompt: 'Find and click the sun (🌞)!', options: ['🌞','🌝','🌚','🌕'], correct: 'sun' },
+      { letter: 'T', prompt: 'Find and click the tiger (🐯)!', options: ['🐯','🐱','🐶','🐵'], correct: 'tiger' },
+      { letter: 'U', prompt: 'Find and click the umbrella (☂️)!', options: ['☂️','🌂','☔','🌧️'], correct: 'umbrella' },
+      { letter: 'V', prompt: 'Find and click the violin (🎻)!', options: ['🎻','🎸','🎷','🎺'], correct: 'violin' },
+      { letter: 'W', prompt: 'Find and click the watermelon (🍉)!', options: ['🍉','🍎','🍌','🍇'], correct: 'watermelon' },
+      { letter: 'X', prompt: 'Find and click the xylophone (🎼)!', options: ['🎼', '🎷', '🎻', '🎺'], correct: 'xylophone' },
+      { letter: 'Y', prompt: 'Find and click the yo-yo (🪀)!', options: ['🪀', '🪁', '🎯', '🏀'], correct: 'yoyo' },
+      { letter: 'Z', prompt: 'Find and click the zebra (🦓)!', options: ['🦓', '🐅', '🐆', '🐘'], correct: 'zebra' }
+    ];
+
+    let currentLevel = 0;
+    const levelEl = document.getElementById('level');
+    const messageEl = document.getElementById('message');
+    const optionsEl = document.getElementById('options');
+
+    const map = {
+      '🍎': 'apple', '🍌': 'banana', '🐱': 'cat', '🐶': 'dog',
+      '🥚': 'egg', '💐': 'flowers', '🍇': 'grapes', '🐴': 'horse',
+      '🍨': 'icecream', '🥤': 'juice', '🪁': 'kite', '🦁': 'lion',
+      '🐒': 'monkey', '📓': 'notebook', '🐙': 'octopus', '🍕': 'pizza',
+      '👸': 'queen', '🐰': 'rabbit', '🌞': 'sun', '🐯': 'tiger',
+      '☂️': 'umbrella', '🎻': 'violin', '🍉': 'watermelon', '🎼': 'xylophone',
+      '🪀': 'yoyo', '🦓': 'zebra'
+    };
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function renderLevel() {
+      const lvl = levels[currentLevel];
+      levelEl.textContent = `Level ${currentLevel + 1} – Letter ${lvl.letter}`;
+      messageEl.textContent = lvl.prompt;
+      optionsEl.innerHTML = '';
+
+      // create options array with correctness flags
+      const optionsWithAnswers = lvl.options.map(symbol => ({
+        symbol,
+        correct: map[symbol] === lvl.correct
+      }));
+
+      shuffle(optionsWithAnswers);
+
+      optionsWithAnswers.forEach(({ symbol, correct }) => {
+        const btn = document.createElement('div');
+        btn.textContent = symbol;
+        btn.className = 'emoji-btn';
+        btn.addEventListener('click', () => handleChoice(symbol, correct));
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function handleChoice(symbol, isCorrect) {
+      const lvl = levels[currentLevel];
+      if (isCorrect) {
+        messageEl.textContent = `Yes! You found the ${lvl.correct}! 🎉`;
+         currentLevel++;
+        cheer.currentTime = 0; // Restart audio if needed
+      cheer.play();
+        changeBackground(currentLevel);
+        if (currentLevel < levels.length) {
+          setTimeout(renderLevel, 1000);
+        } else {
+          setTimeout(() => {
+            levelEl.textContent = 'Congratulations!';
+            messageEl.textContent = 'You completed all levels! ⭐';
+            optionsEl.innerHTML = '';
+          }, 1000);
+        }
+      } else {
+        messageEl.textContent = `Oops! That’s not it… look for the ${lvl.correct}!`;
+      }
+    }
+
+
+    function changeBackground(lvl) {
+      if (lvl % 2) {
+        game.style.background = "linear-gradient(90deg, hsla(186, 33%, 94%, 1) 0%, hsla(216, 41%, 79%, 1) 100%)";
+      } else if (lvl % 3) {
+        game.style.background = "linear-gradient(90deg, hsla(154, 100%, 76%, 1) 0%, hsla(234, 100%, 83%, 1) 50%, hsla(288, 100%, 81%, 1) 100%)";
+      } else if (lvl % 5) {
+        game.style.background = "linear-gradient(90deg, hsla(33, 100%, 53%, 1) 0%, hsla(58, 100%, 68%, 1) 100%)";
+      } else {
+        game.style.background = "linear-gradient(90deg, hsla(197, 100%, 63%, 1) 0%, hsla(294, 100%, 55%, 1) 100%)";
+      }
+    }
+
+
+    renderLevel();
+  </script>
+</body>
+</html>

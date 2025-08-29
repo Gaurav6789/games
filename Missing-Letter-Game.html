@@ -1,0 +1,201 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Missing Letter Game</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      text-align: center;
+      background: linear-gradient(135deg, #ffecd2, #fcb69f, #ff9a9e);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #fff;
+      text-shadow: 2px 2px 4px #000;
+    }
+    #word {
+      font-size: 3rem;
+      margin: 20px;
+      letter-spacing: 8px;
+    }
+    .options {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin: 20px;
+    }
+    .option {
+      background: #fff;
+      border: 3px solid #333;
+      border-radius: 12px;
+      padding: 15px 25px;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option:hover {
+      background: #ffd700;
+      transform: scale(1.1);
+    }
+    .wrong {
+      animation: shake 0.3s;
+      border-color: red;
+      background: #ffb3b3;
+    }
+    .correct {
+      animation: pop 0.4s;
+      border-color: green;
+      background: #b3ffb3;
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    #score, #level {
+      font-size: 1.5rem;
+      margin: 10px;
+      color: #fff;
+      font-weight: bold;
+    }
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: gold;
+      animation: fall 2s linear forwards;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+       <audio id="cheer" preload="none">
+    <source src="game-bonus-144751.mp3" type="audio/mpeg">
+  </audio>
+
+  <h1>🎯 Missing Letter Game</h1>
+  <div id="level">Level: 1 (Easy)</div>
+  <div id="score">Score: 0</div>
+  <div id="word">C_T</div>
+  <div class="options" id="options"></div>
+
+  <script>
+    const words = [
+      "APPLE","BALL","CAT","DOG","ELEPHANT","FISH","GOAT","HEN","ICE",
+      "JOKER","KITE","LION","MONKEY","NEST","ORANGE","PEN","QUEEN","RAT",
+      "SUN","TIGER","UMBRELLA","VAN","WATER","XYLOPHONE","YAK","ZEBRA"
+    ];
+    let score = 0;
+    let level = 1;
+    let currentWord, displayWord, missingIndexes;
+
+    function randomWord() {
+      return words[Math.floor(Math.random() * words.length)];
+    }
+
+    function pickWord() {
+      currentWord = randomWord();
+      let chars = currentWord.split("");
+      missingIndexes = [];
+
+      if (level === 1) {
+        missingIndexes.push(chars.length - 1);
+      } else if (level === 2) {
+        missingIndexes.push(Math.floor(Math.random() * chars.length));
+      } else {
+        while (missingIndexes.length < 2) {
+          let idx = Math.floor(Math.random() * chars.length);
+          if (!missingIndexes.includes(idx)) missingIndexes.push(idx);
+        }
+      }
+
+      displayWord = chars.map((c, i) => missingIndexes.includes(i) ? "_" : c).join("");
+      document.getElementById("word").textContent = displayWord;
+      showOptions(chars);
+    }
+
+    function showOptions(chars) {
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      missingIndexes.forEach((idx) => {
+        let correct = chars[idx];
+        let choices = [correct];
+        while (choices.length < 3) {
+          let randChar = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+          if (!choices.includes(randChar)) choices.push(randChar);
+        }
+        choices.sort(() => Math.random() - 0.5);
+
+        choices.forEach((ch) => {
+          let btn = document.createElement("div");
+          btn.className = "option";
+          btn.textContent = ch;
+          btn.onclick = () => checkAnswer(ch, correct, btn);
+          optionsDiv.appendChild(btn);
+        });
+      });
+    }
+
+    function checkAnswer(choice, correct, btn) {
+      if (choice === correct) {
+        btn.classList.add("correct");
+         cheer.currentTime = 0; // Restart audio if needed
+            cheer.play();
+        score++;
+        document.getElementById("score").textContent = "Score: " + score;
+        confettiBurst();
+        if (score % 7 === 0) {
+          levelUp();
+        }
+        setTimeout(pickWord, 800);
+      } else {
+        btn.classList.add("wrong");
+      }
+    }
+
+    function levelUp() {
+      level++;
+      if (level > 3) level = 3;
+      let levelText = level === 1 ? "Easy" : level === 2 ? "Medium" : "Hard";
+      document.getElementById("level").textContent = "Level: " + level + " (" + levelText + ")";
+    }
+
+    function confettiBurst() {
+      for (let i = 0; i < 20; i++) {
+        let confetti = document.createElement("div");
+        confetti.className = "confetti";
+        confetti.style.left = Math.random() * window.innerWidth + "px";
+        confetti.style.background = `hsl(${Math.random() * 360},100%,50%)`;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 2000);
+      }
+    }
+
+    pickWord();
+  </script>
+</body>
+</html>
