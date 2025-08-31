@@ -2,91 +2,120 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alphabet Slide Puzzle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Alphabet Slide Puzzle – Fun Brain Game</title>
+<meta name="description" content="Play the Alphabet Slide Puzzle game! Arrange letters in order, challenge your brain, and enjoy mobile-friendly gameplay with animated emojis.">
+<meta name="keywords" content="Alphabet Slide Puzzle, Brain Game, Mobile Puzzle, Kids Puzzle, Memory Game, Slide Puzzle">
+<meta name="author" content="OnCharcha Games">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph for social sharing -->
+<meta property="og:title" content="Alphabet Slide Puzzle – Fun Brain Game">
+<meta property="og:description" content="Arrange letters in order in this fun and challenging Alphabet Slide Puzzle. Mobile-friendly and interactive!">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://yourdomain.com/puzzle-thumbnail.png">
+<meta property="og:url" content="https://yourdomain.com/alphabet-slide-puzzle">
+
 <style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg,#fbc2eb,#a6c1ee,#fdcbf1,#a1c4fd);
-    background-size: 400% 400%;
-    animation: gradientBG 20s ease infinite;
-    overflow: hidden;
-  }
-  @keyframes gradientBG {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
-  }
-  h1 {
-    color: #fff;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-    margin-bottom: 5px;
-    text-align: center;
-  }
-  #level, #hint {
-    color: #fff;
-    font-size: 20px;
-    margin-bottom: 8px;
-    font-weight: bold;
-  }
-  #puzzle {
-    display: grid;
-    gap: 8px;
-    justify-content: center;
-    margin-bottom: 12px;
-  }
-  .tile {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 32px;
-    font-weight: bold;
-    color: #fff;
-    border-radius: 12px;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-    transition: all 0.2s ease;
-  }
-  .empty {
-    background: #ffffff80;
-    cursor: default;
-    box-shadow: none;
-  }
-  #message {
-    color: #fff;
-    font-weight: bold;
-    font-size: 18px;
-    margin-bottom: 10px;
-    text-align: center;
-    min-height: 24px;
-  }
-  button {
-    padding: 8px 16px;
-    font-weight: bold;
-    border-radius: 8px;
-    border: none;
-    background: linear-gradient(135deg,#24c6dc,#514a9d);
-    cursor: pointer;
-    color: #fff;
-  }
-  .emoji {
-    position: absolute;
-    font-size: 24px;
-    opacity: 0.3;
-    pointer-events: none;
-    animation: floatEmoji 15s linear infinite;
-  }
-  @keyframes floatEmoji {
-    0% {transform: translateY(100vh) rotate(0deg);}
-    100% {transform: translateY(-20vh) rotate(360deg);}
-  }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg,#fbc2eb,#a6c1ee,#fdcbf1,#a1c4fd);
+  background-size: 400% 400%;
+  animation: gradientBG 20s ease infinite;
+  overflow: hidden;
+}
+@keyframes gradientBG {
+  0% {background-position:0% 50%;}
+  50% {background-position:100% 50%;}
+  100% {background-position:0% 50%;}
+}
+h1 {
+  color: #fff;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  margin-bottom: 5px;
+  text-align: center;
+  font-size: 2rem;
+}
+#level, #hint {
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+#puzzle {
+  display: grid;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 12px;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+  transition: all 0.2s ease;
+}
+.empty {
+  background: #ffffff80;
+  cursor: default;
+  box-shadow: none;
+}
+#message {
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  text-align: center;
+  min-height: 24px;
+}
+button {
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg,#24c6dc,#514a9d);
+  cursor: pointer;
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+.emoji {
+  position: absolute;
+  font-size: 24px;
+  opacity: 0.3;
+  pointer-events: none;
+  animation: floatEmoji 15s linear infinite;
+}
+@keyframes floatEmoji {
+  0% {transform: translateY(100vh) rotate(0deg);}
+  100% {transform: translateY(-20vh) rotate(360deg);}
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px){
+  .tile { width: 60px; height: 60px; font-size:26px; }
+  h1 { font-size: 1.6rem; }
+  #level, #hint { font-size: 1rem; }
+  button { font-size: 0.9rem; padding: 8px 16px; }
+}
+@media (max-width: 480px){
+  .tile { width: 50px; height: 50px; font-size:22px; }
+  h1 { font-size: 1.4rem; }
+  #level, #hint { font-size: 0.9rem; }
+  button { font-size: 0.8rem; padding: 6px 12px; }
+}
 </style>
 </head>
 <body>
@@ -104,20 +133,18 @@ let size = 2;
 let grid = [];
 let emptyPos = {row:size-1,col:size-1};
 let letters = [];
-let currentGradients = []; // store gradient per tile for current level
+let currentGradients = [];
 
 const puzzleEl = document.getElementById('puzzle');
 const messageEl = document.getElementById('message');
 const levelEl = document.getElementById('level');
 const hintEl = document.getElementById('hint');
 
-// Generate letters for current grid size
 function generateLetters(n){
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   return alphabet.slice(0,n*n-1).split('');
 }
 
-// Initialize grid
 function createGrid(){
   letters = generateLetters(size);
   grid = [];
@@ -128,7 +155,7 @@ function createGrid(){
     let gradRow = [];
     for(let c=0;c<size;c++){
       if(r===size-1 && c===size-1){
-        row.push(''); // empty
+        row.push('');
         gradRow.push('');
       } else {
         row.push(letters[idx]);
@@ -146,17 +173,16 @@ function createGrid(){
   updateHint();
 }
 
-// Render grid
 function renderGrid(){
-  puzzleEl.style.gridTemplateColumns = `repeat(${size}, 80px)`;
-  puzzleEl.style.gridTemplateRows = `repeat(${size}, 80px)`;
+  puzzleEl.style.gridTemplateColumns = `repeat(${size}, 70px)`;
+  puzzleEl.style.gridTemplateRows = `repeat(${size}, 70px)`;
   puzzleEl.innerHTML = '';
   for(let r=0;r<size;r++){
     for(let c=0;c<size;c++){
       const tile = document.createElement('div');
       tile.className = 'tile';
       if(grid[r][c]==='') tile.classList.add('empty');
-      else tile.style.background = currentGradients[r][c]; // use gradient from current level
+      else tile.style.background = currentGradients[r][c];
       tile.textContent = grid[r][c];
       tile.addEventListener('click',()=>moveTile(r,c));
       puzzleEl.appendChild(tile);
@@ -164,7 +190,6 @@ function renderGrid(){
   }
 }
 
-// Generate random gradient for tile
 function randomGradient(){
   const colors = [
     ['#ff9a9e','#fad0c4'],
@@ -177,7 +202,6 @@ function randomGradient(){
   return `linear-gradient(135deg, ${pick[0]}, ${pick[1]})`;
 }
 
-// Move tile if adjacent to empty
 function moveTile(r,c){
   const er = emptyPos.row;
   const ec = emptyPos.col;
@@ -189,7 +213,6 @@ function moveTile(r,c){
   }
 }
 
-// Shuffle grid
 function shuffleGrid(){
   for(let i=0;i<200;i++){
     const neighbors = getNeighbors(emptyPos.row, emptyPos.col);
@@ -200,7 +223,6 @@ function shuffleGrid(){
   renderGrid();
 }
 
-// Get neighbors of empty
 function getNeighbors(r,c){
   const moves = [];
   if(r>0) moves.push({row:r-1,col:c});
@@ -210,7 +232,6 @@ function getNeighbors(r,c){
   return moves;
 }
 
-// Check win
 function checkWin(){
   let correct = 0;
   let idx = 0;
@@ -227,7 +248,6 @@ function checkWin(){
   }
 }
 
-// Go to next level
 function nextLevel(){
   if(level<8){
     level++;
@@ -239,13 +259,11 @@ function nextLevel(){
   }
 }
 
-// Update hint
 function updateHint() {
   const hintLetters = letters.slice(0, Math.min(3, letters.length)).join(' → ');
   hintEl.textContent = `Hint: Arrange letters starting with ${hintLetters}`;
 }
 
-// Animated emoji background
 const emojis = ['🧠','🎨','📚','⭐','🌈','💡','🎉'];
 for(let i=0;i<20;i++){
   const e = document.createElement('div');
@@ -259,7 +277,6 @@ for(let i=0;i<20;i++){
 
 document.getElementById('shuffleBtn').addEventListener('click',shuffleGrid);
 
-// Initialize
 createGrid();
 shuffleGrid();
 </script>

@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alphabet Cloud Catch</title>
+<title>Alphabet Cloud Catch - Educational Game</title>
+<meta name="description" content="Play Alphabet Cloud Catch, a fun educational game for kids to learn letters and words. Catch letters from clouds to form words!">
+<meta name="keywords" content="Alphabet game, Kids learning, Educational game, Word game, Letter game, Fun game for children">
+<meta name="author" content="Your Name">
+<meta name="robots" content="index, follow">
 <style>
   body {
     margin: 0;
@@ -16,7 +20,7 @@
     transition: background 0.8s;
   }
 
-  .game {
+  main.game {
     position: relative;
     width: 100%;
     max-width: 900px;
@@ -25,14 +29,21 @@
 
   h1 {
     font-size: 2rem;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     color: #074f6b;
     text-shadow: 2px 2px 6px #a0e0ff;
   }
 
+  #scoreLevel {
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #074f6b;
+  }
+
   #emoji {
-    font-size: 80px;
-    margin-bottom: 20px;
+    font-size: 60px;
+    margin-bottom: 15px;
+    transition: font-size 0.3s;
   }
 
   #wordBox {
@@ -76,8 +87,9 @@
     transition: transform 0.2s;
   }
 
-  .cloud:hover {
+  .cloud:hover, .cloud:focus {
     transform: scale(1.1);
+    outline: none;
   }
 
   .controls {
@@ -104,7 +116,6 @@
     min-height: 24px;
   }
 
-  /* Confetti */
   .confetti {
     position: absolute;
     width: 10px;
@@ -116,58 +127,55 @@
   /* Responsive */
   @media (max-width: 520px){
     h1 { font-size: 1.5rem; }
-    #emoji { font-size: 60px; }
+    #emoji { font-size: 50px; }
     .letter-box { width: 40px; height: 40px; font-size: 20px; }
-    .cloud { font-size: 20px; padding: 8px 16px; }
+    .cloud { font-size: 18px; padding: 8px 16px; }
     button { font-size: 14px; padding: 8px 12px; }
   }
 </style>
 </head>
 <body>
-<div class="game">
+<main class="game">
   <h1>Alphabet Cloud Catch</h1>
-  <div id="emoji">🍎</div>
+  <div id="scoreLevel">Score: 0 | Level: 1</div>
+  <div id="emoji" aria-live="polite">🍎</div>
   <div id="wordBox"></div>
   <div id="clouds"></div>
 
-  <div class="controls">
-    <button id="hintBtn">Show Hint</button>
-    <button id="refillBtn">Refill</button>
-  </div>
-  <div id="hintDisplay"></div>
+  <section class="controls">
+    <button id="hintBtn" aria-label="Show hint for current word">Show Hint</button>
+    <button id="refillBtn" aria-label="Refill letters to try again">Refill</button>
+  </section>
+  <div id="hintDisplay" aria-live="polite"></div>
 
   <audio id="cheer" preload="none">
     <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" type="audio/ogg">
     <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.mp3" type="audio/mpeg">
   </audio>
-</div>
+</main>
 
 <script>
 const words = [
-  {word:"APPLE", emoji:"🍎"}, {word:"BALL", emoji:"⚽"}, {word:"CAT", emoji:"🐱"},
-  {word:"DOG", emoji:"🐶"}, {word:"FISH", emoji:"🐟"}, {word:"GRAPE", emoji:"🍇"},
-  {word:"HOUSE", emoji:"🏠"}, {word:"ORANGE", emoji:"🍊"}, {word:"SUN", emoji:"☀️"},
-  {word:"TREE", emoji:"🌳"}, {word:"MONKEY", emoji:"🐵"}, {word:"PANDA", emoji:"🐼"},
-  {word:"LION", emoji:"🦁"}, {word:"RABBIT", emoji:"🐇"}, {word:"QUEEN", emoji:"👑"},
-  {word:"YAK", emoji:"🐂"}, {word:"ZEBRA", emoji:"🦓"}, {word:"ICE", emoji:"🧊"},
-  {word:"JUICE", emoji:"🧃"}, {word:"KITE", emoji:"🪁"}, {word:"UMBRELLA", emoji:"☂️"},
-  {word:"VIOLIN", emoji:"🎻"}, {word:"WATER", emoji:"💧"}, {word:"XYLOPHONE", emoji:"🎼"},
-  {word:"ELEPHANT", emoji:"🐘"}, {word:"GUITAR", emoji:"🎸"}, {word:"MOUSE", emoji:"🐭"},
-  {word:"BEE", emoji:"🐝"}, {word:"OWL", emoji:"🦉"}, {word:"CUP", emoji:"☕"},
-  {word:"CAR", emoji:"🚗"}, {word:"HAT", emoji:"🎩"}, {word:"BOOK", emoji:"📚"},
-  {word:"PEN", emoji:"🖊️"}, {word:"FOOT", emoji:"🦶"}, {word:"HAND", emoji:"✋"},
-  {word:"EAR", emoji:"👂"}, {word:"NOSE", emoji:"👃"}, {word:"FORK", emoji:"🍴"},
-  {word:"SPOON", emoji:"🥄"}, {word:"CHAIR", emoji:"🪑"}, {word:"TABLE", emoji:"🛋️"},
-  {word:"CLOCK", emoji:"⏰"}, {word:"BAG", emoji:"👜"}, {word:"KEY", emoji:"🔑"},
-  {word:"DOOR", emoji:"🚪"}, {word:"RING", emoji:"💍"}, {word:"CANDLE", emoji:"🕯️"},
-  {word:"BALLOON", emoji:"🎈"}, {word:"FLAG", emoji:"🚩"}, {word:"STAR", emoji:"⭐"}
+  {word:"cat", emoji:"🐱"}, {word:"dog", emoji:"🐶"}, {word:"sun", emoji:"☀️"},
+  {word:"bee", emoji:"🐝"}, {word:"cup", emoji:"☕"}, {word:"pen", emoji:"🖊️"},
+  {word:"bat", emoji:"🏏"}, {word:"hat", emoji:"🎩"}, {word:"car", emoji:"🚗"},
+  {word:"fox", emoji:"🦊"}, {word:"egg", emoji:"🥚"}, {word:"ice", emoji:"🧊"},
+  {word:"apple", emoji:"🍎"}, {word:"ball", emoji:"⚽"}, {word:"fish", emoji:"🐟"},
+  {word:"grape", emoji:"🍇"}, {word:"tree", emoji:"🌳"}, {word:"lion", emoji:"🦁"},
+  {word:"panda", emoji:"🐼"}, {word:"monkey", emoji:"🐵"}, {word:"house", emoji:"🏠"},
+  {word:"orange", emoji:"🍊"}, {word:"zebra", emoji:"🦓"}, {word:"violin", emoji:"🎻"},
+  {word:"queen", emoji:"👑"}, {word:"water", emoji:"💧"}, {word:"umbrella", emoji:"☂️"},
+  {word:"elephant", emoji:"🐘"}, {word:"guitar", emoji:"🎸"}, {word:"rabbit", emoji:"🐇"}
 ];
 
 let currentWord = "";
 let filled = [];
+let score = 0;
+let level = 1;
 const cloudsDiv = document.getElementById('clouds');
 const wordBoxDiv = document.getElementById('wordBox');
 const emojiDiv = document.getElementById('emoji');
+const scoreLevelDiv = document.getElementById('scoreLevel');
 const cheer = document.getElementById('cheer');
 const body = document.body;
 
@@ -181,10 +189,23 @@ const backgrounds = [
 let bgIndex = 0;
 
 function startGame() {
-  const pick = words[Math.floor(Math.random()*words.length)];
-  currentWord = pick.word;
-  emojiDiv.textContent = pick.emoji;
+  pickWord();
+  setupWordBoxes();
+  renderClouds();
+  hideRefill();
+  updateScoreLevel();
+  adjustEmojiSize();
+}
 
+function pickWord(){
+  const maxLength = Math.min(3 + Math.floor(level/2), 10); // start with 3 letters, increase gradually
+  const possibleWords = words.filter(w => w.word.length <= maxLength);
+  const pick = possibleWords[Math.floor(Math.random()*possibleWords.length)];
+  currentWord = pick.word.toUpperCase();
+  emojiDiv.textContent = pick.emoji;
+}
+
+function setupWordBoxes() {
   wordBoxDiv.innerHTML = "";
   filled = [];
   for(let i=0;i<currentWord.length;i++){
@@ -195,21 +216,21 @@ function startGame() {
     wordBoxDiv.appendChild(box);
     filled.push("");
   }
-
-  renderClouds();
-  hideRefill();
 }
 
 function renderClouds() {
   cloudsDiv.innerHTML = "";
   const letters = shuffle(currentWord.split(''));
-  letters.forEach((l,i)=>{
+  letters.forEach((l)=>{
     const cloud = document.createElement('div');
     cloud.className = 'cloud';
     cloud.textContent = l;
     cloud.style.top = Math.random()*150 + "px";
-    cloud.style.left = Math.random()*80 + "%";
+    cloud.style.left = Math.random()*(window.innerWidth-100) + "px";
+    cloud.tabIndex = 0;
+    cloud.setAttribute('aria-label', `Letter ${l}`);
     cloud.onclick = () => handleClickLetter(l, cloud);
+    cloud.onkeydown = (e)=> { if(e.key==="Enter"||e.key===" ") handleClickLetter(l, cloud); };
     cloudsDiv.appendChild(cloud);
     animateCloud(cloud);
   });
@@ -222,8 +243,8 @@ function animateCloud(el){
   function move(){
     left += speed*direction;
     if(left<0) direction=1;
-    if(left>80) direction=-1;
-    el.style.left = left + "%";
+    if(left>window.innerWidth-100) direction=-1;
+    el.style.left = left + "px";
     requestAnimationFrame(move);
   }
   move();
@@ -240,10 +261,14 @@ function handleClickLetter(letter, el){
     confettiBurst();
     bgIndex = (bgIndex+1)%backgrounds.length;
     body.style.background = backgrounds[bgIndex];
+    score += 1;
+    level += 1;
     setTimeout(startGame, 800);
   } else if(!filled.includes("")){
     showRefill();
   }
+  updateScoreLevel();
+  adjustEmojiSize();
 }
 
 function showRefill(){
@@ -292,6 +317,16 @@ function confettiBurst(){
   }
 }
 
+function updateScoreLevel(){
+  scoreLevelDiv.textContent = `Score: ${score} | Level: ${level}`;
+}
+
+function adjustEmojiSize(){
+  const newSize = Math.min(60 + level*5, 120);
+  emojiDiv.style.fontSize = newSize + "px";
+}
+
+// Start first game
 startGame();
 </script>
 </body>

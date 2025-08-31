@@ -2,7 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cartoon Catch Game – Level Up!</title>
+  
+  <!-- ✅ SEO Meta Tags -->
+  <meta name="description" content="Play the Cartoon Catch Game – catch cute emojis, avoid bombs, and level up! Fun, interactive, and mobile-friendly game for all ages." />
+  <meta name="keywords" content="Cartoon Catch Game, emoji game, kids game, fun game, mobile game, interactive game, online game" />
+  <meta name="author" content="Fun Games Studio" />
+  <meta name="robots" content="index, follow" />
+
   <style>
     body {
       margin: 0;
@@ -21,57 +29,73 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Score & Level UI */
     #ui {
-
-      top: 20px;
+      position: fixed;
+      top: 10px;
+      width: 100%;
       text-align: center;
-
+      z-index: 1000;
     }
-
     #score, #level {
-      font-size: 2.2em;
+      font-size: 2em;
       color: #fff;
       text-shadow: 2px 2px 6px #000;
-    }
-
-    @keyframes glow {
-      0% { box-shadow: 0 0 15px rgba(255,255,255,0.3); }
-      100% { box-shadow: 0 0 30px rgba(255,255,255,0.8); }
+      margin: 4px;
     }
 
     .cartoon {
       position: absolute;
-      font-size: 60px;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
       z-index: 500;
       text-shadow: 1px 1px 5px #000;
     }
-
     .cartoon:hover {
       transform: scale(1.2) rotate(10deg);
       box-shadow: 0 0 20px #fff;
     }
-
     .cartoon:active {
       transform: scale(1.5) rotate(-15deg);
       box-shadow: 0 0 30px yellow;
     }
 
-    /* Floating emojis */
     .floating {
       position: fixed;
-      font-size: 2rem;
+      font-size: 2.5rem;
       animation: floatEmoji linear infinite;
       opacity: 0.4;
-      z-index: 0; /* behind everything */
+      z-index: 0;
       pointer-events: none;
     }
-
     @keyframes floatEmoji {
       from { transform: translateY(100vh) scale(0.8); opacity: 0; }
       to   { transform: translateY(-10vh) scale(1.2); opacity: 1; }
+    }
+
+    /* Bomb overlay */
+    #bombOverlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      color: white;
+      font-size: 2em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .cartoon { font-size: 45px; }
+      .floating { font-size: 2rem; }
+      #score, #level { font-size: 1.5em; }
+    }
+    @media (max-width: 480px) {
+      .cartoon { font-size: 35px; }
+      .floating { font-size: 1.5rem; }
+      #score, #level { font-size: 1.2em; }
     }
   </style>
 </head>
@@ -80,56 +104,109 @@
     <div id="score">Score: 0</div>
     <div id="level">Level: 1</div>
   </div>
- 
+
+  <!-- Bomb Overlay -->
+  <div id="bombOverlay">
+    💥 Game Over! <br/>
+    Your Score: <span id="finalScore"></span> <br/>
+    <button onclick="restartGame()" style="margin-top:20px; padding:10px 20px; font-size:1em;">Restart</button>
+  </div>
+
   <!-- Cheer sound -->
   <audio id="cheer" preload="none">
     <source src="collect-points-190037.mp3" type="audio/mpeg">
   </audio>
 
-
   <script>
     const cheer = document.getElementById("cheer");
     cheer.volume = 1;
+
     const characters = ['🐱','🐭','🐶','🐹','🐰','🦊','🐼'];
+    const bonusEmoji = '🎣';
+    const dangerEmoji = '💣';
     let score = 0;
     let level = 1;
     const scoreEl = document.getElementById('score');
     const levelEl = document.getElementById('level');
+    const bombOverlay = document.getElementById('bombOverlay');
+    const finalScore = document.getElementById('finalScore');
     let interval = 1000;
+
+    function confettiBurst() {
+      for(let i=0;i<50;i++){
+        const c=document.createElement('div');
+        c.style.position='absolute';
+        c.style.left=Math.random()*100+'vw';
+        c.style.top='-10px';
+        const size = 5+Math.random()*10;
+        c.style.width=c.style.height = size+'px';
+        c.style.borderRadius='50%';
+        c.style.background=`hsl(${Math.random()*360},80%,60%)`;
+        c.style.opacity='0.9';
+        c.style.pointerEvents='none';
+        c.style.transition=`transform ${1.5+Math.random()}s ease, opacity 1s`;
+        document.body.appendChild(c);
+        setTimeout(()=>{ 
+          c.style.transform=`translateY(${window.innerHeight+50}px) rotate(${Math.random()*720}deg)`; 
+          c.style.opacity='0'; 
+        },10);
+        setTimeout(()=>c.remove(),2000);
+      }
+    }
 
     function spawnCharacter() {
       const el = document.createElement('div');
-      el.textContent = characters[Math.floor(Math.random() * characters.length)];
-      el.className = 'cartoon';
 
-      const x = Math.random() * (window.innerWidth - 60);
-      const y = Math.random() * (window.innerHeight - 60);
+      const rand = Math.random();
+      if (rand < 0.7) el.textContent = characters[Math.floor(Math.random() * characters.length)];
+      else if (rand < 0.9) el.textContent = bonusEmoji;
+      else el.textContent = dangerEmoji;
+
+      el.className = 'cartoon';
+      const size = 50 + Math.random()*40;
+      el.style.fontSize = size + 'px';
+      const x = Math.random() * (window.innerWidth - size);
+      const y = Math.random() * (window.innerHeight - size);
       const rotation = (Math.random() - 0.5) * 30; 
       el.style.left = x + 'px';
       el.style.top = y + 'px';
       el.style.transform = `rotate(${rotation}deg)`;
 
       el.addEventListener('click', () => {
-        score++;
-        scoreEl.textContent = 'Score: ' + score;
-
-          cheer.currentTime = 0; // Restart audio if needed
+        if (el.textContent === dangerEmoji) {
+          finalScore.textContent = score;
+          bombOverlay.style.display = 'flex';
+          clearInterval(spawnInterval);
+        } else {
+          score += (el.textContent === bonusEmoji) ? 5 : 1;
+          scoreEl.textContent = 'Score: ' + score;
+          if (el.textContent === bonusEmoji) confettiBurst();
+          cheer.currentTime = 0;
           cheer.play();
 
-        el.remove();
-
-        if (score % 10 === 0) {
-          level++;
-          levelEl.textContent = 'Level: ' + level;
-          clearInterval(spawnInterval);
-          interval = Math.max(300, interval - 150);
-          spawnInterval = setInterval(spawnCharacter, interval);
+          if (score % 10 === 0) {
+            level++;
+            levelEl.textContent = 'Level: ' + level;
+            clearInterval(spawnInterval);
+            interval = Math.max(300, interval - 150);
+            spawnInterval = setInterval(spawnCharacter, interval);
+          }
         }
-
+        el.remove();
       });
 
       document.body.appendChild(el);
-      setTimeout(() => el.remove(), 3000);
+      setTimeout(() => el.remove(), 4000);
+    }
+
+    function restartGame() {
+      bombOverlay.style.display = 'none';
+      score = 0;
+      level = 1;
+      interval = 1000;
+      scoreEl.textContent = 'Score: 0';
+      levelEl.textContent = 'Level: 1';
+      spawnInterval = setInterval(spawnCharacter, interval);
     }
 
     let spawnInterval = setInterval(spawnCharacter, interval);

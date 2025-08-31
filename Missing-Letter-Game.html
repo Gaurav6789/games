@@ -1,200 +1,391 @@
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Missing Letter Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🎯 Missing Letter Word Puzzle Game – Levels, Hints & Fun</title>
+  <meta name="description" content="Play the Missing Letter Game! Fill in letters with emoji hints, increasing levels, and three attempts per word. Great for kids and adults to learn and have fun." />
+  <meta name="keywords" content="missing letter game, word puzzle, kids learning game, vocabulary game, emoji hints, educational game" />
+  <meta name="author" content="Alphabet Fun Studio" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Missing Letter Word Puzzle Game" />
+  <meta property="og:description" content="Fill in the missing letters with emoji hints. Level up the challenge with three attempts per word!" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://example.com/preview.jpg" />
+  <meta property="og:url" content="https://example.com/missing-letter-game" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Missing Letter Word Puzzle Game" />
+  <meta name="twitter:description" content="Emoji hints, levels, and three attempts per word. Try it now!" />
+  <meta name="twitter:image" content="https://example.com/preview.jpg" />
+
   <style>
+    :root{
+      --card-bg: rgba(255,255,255,0.85);
+      --card-br: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
     body {
-      font-family: 'Comic Sans MS', cursive;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       text-align: center;
-      background: linear-gradient(135deg, #ffecd2, #fcb69f, #ff9a9e);
-      height: 100vh;
       margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+      background: linear-gradient(135deg, #ffecd2, #fcb69f, #ff9a9e);
+      background-attachment: fixed;
+      transition: background 600ms ease-in-out;
+      padding: 16px;
+    }
+    header{
+      color: #1f2937;
     }
     h1 {
-      font-size: 2.5rem;
-      color: #fff;
-      text-shadow: 2px 2px 4px #000;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      margin: 4px 0 0;
     }
-    #word {
-      font-size: 3rem;
-      margin: 20px;
-      letter-spacing: 8px;
-    }
-    .options {
+    #uiBar{
       display: flex;
-      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
       justify-content: center;
-      margin: 20px;
+      gap: 10px 16px;
+      margin: 8px auto 0;
     }
-    .option {
-      background: #fff;
-      border: 3px solid #333;
-      border-radius: 12px;
-      padding: 15px 25px;
-      font-size: 2rem;
+    .badge{
+      background: var(--card-bg);
+      padding: 8px 14px;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      font-weight: 700;
+      font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+    }
+    #hint{
+      font-size: clamp(2rem, 6vw, 3rem);
+      line-height: 1;
+      margin-top: 8px;
+    }
+
+    main{
+      display: grid;
+      place-items: center;
+      gap: 14px;
+    }
+    #word{
+      font-size: clamp(1.6rem, 6vw, 2.4rem);
+      letter-spacing: 12px;
+      color: #111827;
+      background: var(--card-bg);
+      padding: 14px 18px;
+      border-radius: var(--card-br);
+      box-shadow: var(--shadow);
+      user-select: none;
+    }
+    #options{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
+      gap: 12px;
+      width: min(900px, 95vw);
+    }
+    .option{
+      background: #ffffff;
+      border: 3px solid #111827;
+      border-radius: 14px;
+      padding: 12px 4px;
+      font-size: clamp(1.2rem, 4.5vw, 1.6rem);
+      font-weight: 800;
       cursor: pointer;
-      transition: 0.3s;
+      transition: transform 0.12s ease, background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+      box-shadow: var(--shadow);
+      touch-action: manipulation;
+      user-select: none;
     }
-    .option:hover {
-      background: #ffd700;
-      transform: scale(1.1);
-    }
-    .wrong {
-      animation: shake 0.3s;
-      border-color: red;
-      background: #ffb3b3;
-    }
-    .correct {
-      animation: pop 0.4s;
-      border-color: green;
-      background: #b3ffb3;
-    }
+    .option:active{ transform: scale(0.96); }
+    .option.correct{ border-color: #16a34a; background: #b7f7c1; }
+    .option.wrong{ border-color: #dc2626; background: #fecaca; animation: shake 0.18s; }
+    .option.disabled{ opacity: 0.45; pointer-events: none; }
+
     @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      50% { transform: translateX(5px); }
-      75% { transform: translateX(-5px); }
-      100% { transform: translateX(0); }
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      75% { transform: translateX(-4px); }
     }
-    @keyframes pop {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-      100% { transform: scale(1); }
+
+    .buttons{
+      display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
     }
-    #score, #level {
-      font-size: 1.5rem;
-      margin: 10px;
-      color: #fff;
-      font-weight: bold;
+    .btn{
+      appearance: none;
+      border: 0;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 0.1s ease, opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
     }
+    .btn:active{ transform: translateY(1px); }
+    .btn-skip{ background: #111827; color: #fff; }
+    .btn-new{ background: #f59e0b; color: #111827; }
+    .btn-skip:disabled, .btn-new:disabled{ opacity: 0.5; cursor: not-allowed; }
+
     .confetti {
-      position: absolute;
+      position: fixed;
       width: 10px;
       height: 10px;
-      background: gold;
-      animation: fall 2s linear forwards;
+      border-radius: 50%;
+      animation: fall 2.2s linear forwards;
+      pointer-events: none;
+      z-index: 9999;
     }
     @keyframes fall {
-      to {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0;
-      }
+      to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    footer{ color:#111827; opacity:0.8; font-size: .9rem; }
+
+    @media (max-width: 520px){
+      #word{ letter-spacing: 8px; }
     }
   </style>
 </head>
 <body>
-       <audio id="cheer" preload="none">
-    <source src="game-bonus-144751.mp3" type="audio/mpeg">
+  <audio id="cheer" preload="none">
+    <source src="./assets/audio/game-bonus-144751.mp3" type="audio/mpeg">
   </audio>
 
-  <h1>🎯 Missing Letter Game</h1>
-  <div id="level">Level: 1 (Easy)</div>
-  <div id="score">Score: 0</div>
-  <div id="word">C_T</div>
-  <div class="options" id="options"></div>
+  <header>
+    <h1>🎯 Missing Letter Word Puzzle</h1>
+    <div id="uiBar">
+      <span id="level" class="badge">Level: 1 (Easy)</span>
+      <span id="score" class="badge">Score: 0</span>
+      <span id="attempts" class="badge">Attempts Left: 3</span>
+    </div>
+    <div id="hint" aria-live="polite" title="Emoji Hint">🙂</div>
+  </header>
+
+  <main>
+    <div id="word" aria-live="polite">_ _ _</div>
+    <div id="options" role="group" aria-label="Choose a letter"></div>
+    <div class="buttons">
+      <button id="skipBtn" class="btn btn-skip" type="button">Skip Word (−1 attempt)</button>
+      <button id="newBtn" class="btn btn-new" type="button">New Word</button>
+    </div>
+  </main>
+
+  <footer>
+    Tip: Fill the blanks from left to right. Use the emoji as a clue!
+  </footer>
 
   <script>
-    const words = [
-      "APPLE","BALL","CAT","DOG","ELEPHANT","FISH","GOAT","HEN","ICE",
-      "JOKER","KITE","LION","MONKEY","NEST","ORANGE","PEN","QUEEN","RAT",
-      "SUN","TIGER","UMBRELLA","VAN","WATER","XYLOPHONE","YAK","ZEBRA"
-    ];
-    let score = 0;
-    let level = 1;
-    let currentWord, displayWord, missingIndexes;
+    // ---------- Data (12 words per level; Level 4 uses longer words) ----------
+    const wordSets = {
+      1: [
+        ["CAT","🐱"], ["DOG","🐶"], ["CAR","🚗"], ["SUN","☀️"],
+        ["PEN","✏️"], ["BAT","🦇"], ["HAT","🎩"], ["JAM","🍓"],
+        ["MAP","🗺️"], ["RAT","🐭"], ["BOX","📦"], ["CAP","🧢"]
+      ],
+      2: [
+        ["LION","🦁"], ["FISH","🐟"], ["MOON","🌙"], ["CAKE","🎂"],
+        ["BOOK","📖"], ["TREE","🌳"], ["DUCK","🦆"], ["FROG","🐸"],
+        ["KING","🤴"], ["RING","💍"], ["SHIP","🚢"], ["STAR","⭐"]
+      ],
+      3: [
+        ["ZEBRA","🦓"], ["APPLE","🍎"], ["HOUSE","🏠"], ["CLOUD","☁️"],
+        ["MOUSE","🐭"], ["WATER","💧"], ["PLANE","✈️"], ["SNAKE","🐍"],
+        ["TRAIN","🚂"], ["HORSE","🐴"], ["BREAD","🍞"], ["HEART","❤️"]
+      ],
+      4: [
+        ["ELEPHANT","🐘"], ["UMBRELLA","☂️"], ["TELEPHONE","☎️"], ["COMPUTER","💻"],
+        ["NOTEBOOK","📓"], ["TEACHER","👩‍🏫"], ["BANANA","🍌"], ["PRINCESS","👸"],
+        ["DRAGON","🐉"], ["CROCODILE","🐊"], ["FLOWER","🌸"], ["ROBOT","🤖"]
+      ]
+    };
 
-    function randomWord() {
-      return words[Math.floor(Math.random() * words.length)];
+    // Background gradients by level
+    const levelBackgrounds = {
+      1: "linear-gradient(135deg, #ffecd2, #fcb69f, #ff9a9e)",
+      2: "linear-gradient(135deg, #a1c4fd, #c2e9fb, #b2fefa)",
+      3: "linear-gradient(135deg, #d4fc79, #96e6a1, #84fab0)",
+      4: "linear-gradient(135deg, #fbc2eb, #a18cd1, #fad0c4)"
+    };
+
+    // ---------- State ----------
+    let score = 0, level = 1, attempts = 3;
+    let currentWord = "", hint = "🙂", chars = [];
+    let missingIndexes = [];        // which positions are blanks
+    let filledIndexes = [];         // which blanks have been correctly filled (by index)
+
+    // ---------- Elements ----------
+    const levelEl = document.getElementById("level");
+    const scoreEl = document.getElementById("score");
+    const attemptsEl = document.getElementById("attempts");
+    const hintEl = document.getElementById("hint");
+    const wordEl = document.getElementById("word");
+    const optionsEl = document.getElementById("options");
+    const skipBtn = document.getElementById("skipBtn");
+    const newBtn = document.getElementById("newBtn");
+    const cheer = document.getElementById("cheer");
+
+    // ---------- Helpers ----------
+    function randItem(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+
+    function confettiBurst() {
+      for (let i = 0; i < 24; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random() * window.innerWidth + "px";
+        c.style.top = "-10px";
+        c.style.background = `hsl(${Math.random()*360},100%,50%)`;
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 2000);
+      }
     }
 
-    function pickWord() {
-      currentWord = randomWord();
-      let chars = currentWord.split("");
-      missingIndexes = [];
+    function updateBackground() {
+      document.body.style.background = levelBackgrounds[level] || levelBackgrounds[1];
+    }
 
-      if (level === 1) {
-        missingIndexes.push(chars.length - 1);
-      } else if (level === 2) {
-        missingIndexes.push(Math.floor(Math.random() * chars.length));
-      } else {
-        while (missingIndexes.length < 2) {
-          let idx = Math.floor(Math.random() * chars.length);
-          if (!missingIndexes.includes(idx)) missingIndexes.push(idx);
+    function updateUI() {
+      const levelText = level === 1 ? "Easy" : level === 2 ? "Medium" : level === 3 ? "Hard" : "Expert";
+      levelEl.textContent = `Level: ${level} (${levelText})`;
+      scoreEl.textContent = `Score: ${score}`;
+      attemptsEl.textContent = `Attempts Left: ${attempts}`;
+    }
+
+    function displayWord() {
+      const out = chars.map((ch, i) => {
+        // show actual char if it's not a blank, or if this blank index was filled
+        if (!missingIndexes.includes(i)) return ch;
+        return filledIndexes.includes(i) ? ch : "_";
+      }).join(" ");
+      wordEl.textContent = out;
+    }
+
+    // Build letter choices: include all correct letters (with multiplicity) + random distractors
+    function buildChoices() {
+      optionsEl.innerHTML = "";
+      const corrects = missingIndexes.map(i => chars[i]); // includes duplicates if needed
+      const choices = [...corrects];
+
+      // Add distinct random letters (avoid over-duplication; keep choices broad)
+      while (choices.length < corrects.length + 6) {
+        const randChar = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+        // allow duplicates of corrects (already in choices), but avoid duplicate distractors
+        if (!corrects.includes(randChar) && !choices.includes(randChar)) {
+          choices.push(randChar);
         }
       }
+      choices.sort(() => Math.random() - 0.5);
 
-      displayWord = chars.map((c, i) => missingIndexes.includes(i) ? "_" : c).join("");
-      document.getElementById("word").textContent = displayWord;
-      showOptions(chars);
-    }
-
-    function showOptions(chars) {
-      const optionsDiv = document.getElementById("options");
-      optionsDiv.innerHTML = "";
-      missingIndexes.forEach((idx) => {
-        let correct = chars[idx];
-        let choices = [correct];
-        while (choices.length < 3) {
-          let randChar = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-          if (!choices.includes(randChar)) choices.push(randChar);
-        }
-        choices.sort(() => Math.random() - 0.5);
-
-        choices.forEach((ch) => {
-          let btn = document.createElement("div");
-          btn.className = "option";
-          btn.textContent = ch;
-          btn.onclick = () => checkAnswer(ch, correct, btn);
-          optionsDiv.appendChild(btn);
-        });
+      choices.forEach(ch => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option";
+        btn.textContent = ch;
+        btn.addEventListener("click", () => handleChoice(ch, btn));
+        optionsEl.appendChild(btn);
       });
     }
 
-    function checkAnswer(choice, correct, btn) {
-      if (choice === correct) {
+    // Choose next blank strictly left-to-right (fixes LION/KING order issue)
+    function nextBlankIndex() {
+      for (const idx of missingIndexes) {
+        if (!filledIndexes.includes(idx)) return idx;
+      }
+      return undefined;
+    }
+
+    function handleChoice(choice, btn) {
+      const nb = nextBlankIndex();
+      if (nb === undefined) return; // already done
+
+      if (choice === chars[nb]) {
         btn.classList.add("correct");
-         cheer.currentTime = 0; // Restart audio if needed
-            cheer.play();
-        score++;
-        document.getElementById("score").textContent = "Score: " + score;
-        confettiBurst();
-        if (score % 7 === 0) {
-          levelUp();
+        btn.classList.add("disabled");
+        btn.disabled = true;
+
+        filledIndexes.push(nb);
+        displayWord();
+
+        if (filledIndexes.length === missingIndexes.length) {
+          // Completed the word
+          score++;
+          updateUI();
+          try { cheer.currentTime = 0; cheer.play(); } catch(e){}
+          confettiBurst();
+
+          // Level up every 7 points (optional; keep behavior)
+          if (score % 7 === 0 && level < 4) {
+            level++;
+            updateBackground();
+          }
+          // New word after a short pause
+          setTimeout(pickWord, 750);
         }
-        setTimeout(pickWord, 800);
       } else {
         btn.classList.add("wrong");
+        attempts--;
+        updateUI();
+        if (attempts <= 0) {
+          // Out of attempts → auto-load another word (same level), reset attempts to 3
+          setTimeout(() => { pickWord(); }, 500);
+        }
       }
     }
 
-    function levelUp() {
-      level++;
-      if (level > 3) level = 3;
-      let levelText = level === 1 ? "Easy" : level === 2 ? "Medium" : "Hard";
-      document.getElementById("level").textContent = "Level: " + level + " (" + levelText + ")";
-    }
+    // Pick a word suitable for current level (ensure length >= number of blanks)
+    function pickWord() {
+      // attempts reset to 3 on every new word (as requested)
+      attempts = 3;
+      updateUI();
 
-    function confettiBurst() {
-      for (let i = 0; i < 20; i++) {
-        let confetti = document.createElement("div");
-        confetti.className = "confetti";
-        confetti.style.left = Math.random() * window.innerWidth + "px";
-        confetti.style.background = `hsl(${Math.random() * 360},100%,50%)`;
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 2000);
+      const blanks = Math.min(level, 4); // L1=>1, L2=>2, L3=>3, L4=>4
+      let choice;
+      // Ensure chosen word is long enough for the number of blanks
+      const pool = wordSets[level].filter(([w]) => w.length >= blanks);
+      choice = randItem(pool.length ? pool : wordSets[level]);
+
+      currentWord = choice[0].toUpperCase();
+      hint = choice[1] || "🙂";
+      hintEl.textContent = hint;
+      chars = currentWord.split("");
+
+      // Choose <blanks> unique positions, then sort ascending (left-to-right filling)
+      const idxs = new Set();
+      while (idxs.size < blanks) {
+        idxs.add(Math.floor(Math.random() * chars.length));
       }
+      missingIndexes = Array.from(idxs).sort((a,b) => a - b);
+      filledIndexes = [];
+
+      displayWord();
+      buildChoices();
     }
 
+    // Buttons
+    skipBtn.addEventListener("click", () => {
+      attempts--;
+      updateUI();
+      if (attempts <= 0) {
+        // out of attempts → new word
+        pickWord();
+      }
+    });
+
+    newBtn.addEventListener("click", () => {
+      // fresh word, reset attempts to 3 (handled inside pickWord)
+      pickWord();
+    });
+
+    // Init
+    updateBackground();
     pickWord();
   </script>
 </body>

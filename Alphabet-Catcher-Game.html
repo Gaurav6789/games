@@ -1,204 +1,202 @@
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Alphabet Catcher Game</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-    }
-    #game {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(to bottom, #a8e6ff, #ffffff, #ffd6e0);
-    }
-    .letter {
-      position: absolute;
-      font-size: 32px;
-      font-weight: bold;
-      color: #fff;
-      background: #ff6f61;
-      padding: 8px 12px;
-      border-radius: 50%;
-      text-align: center;
-      user-select: none;
-    }
-    #basket {
-      width: 120px;
-      height: 80px;
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      cursor: grab;
-    }
-    #scoreboard {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 20px;
-      font-weight: bold;
-      background: rgba(255,255,255,0.7);
-      padding: 6px 12px;
-      border-radius: 8px;
-    }
-    svg {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alphabet Catcher Game – Fun Learning Game</title>
+<meta name="description" content="Catch the correct letters in the Alphabet Catcher Game! Avoid missing letters, level up, and increase speed. Fun and educational for kids and adults.">
+<meta name="keywords" content="Alphabet Game, Catch Letters, Kids Game, Educational Game, Learning Letters, Fun Game">
+<meta name="author" content="Alphabet Fun Studio">
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+#game {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #a8e6ff, #ffffff, #ffd6e0);
+    transition: background 0.8s ease-in-out;
+}
+.letter {
+    position: absolute;
+    font-size: 32px;
+    font-weight: bold;
+    color: #fff;
+    background: #ff6f61;
+    padding: 8px 12px;
+    border-radius: 50%;
+    text-align: center;
+    user-select: none;
+}
+#basket {
+    width: 120px;
+    height: 80px;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: grab;
+}
+#basket svg {
+    width: 100%;
+    height: 100%;
+}
+#scoreboard {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    font-weight: bold;
+    background: rgba(255,255,255,0.7);
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+@media (max-width:480px){
+    .letter { font-size: 24px; padding: 6px 10px; }
+    #basket { width: 80px; height: 60px; }
+    #basket svg { width: 100%; height: 100%; }
+    #scoreboard { font-size: 16px; padding: 4px 8px; }
+}
+</style>
 </head>
 <body>
-    <audio id="cheer" preload="none">
-    <source src="level-complete-394515.mp3" type="audio/mpeg">
-  </audio>
 
-  <div id="game">
+<audio id="cheer" preload="none">
+  <source src="./assets/audio/level-complete-394515.mp3" type="audio/mpeg">
+</audio>
+
+<div id="game">
     <div id="basket">
-      <!-- SVG bucket -->
-      <svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
-        <!-- Bucket body -->
-        <rect x="10" y="30" width="100" height="60" rx="10" ry="10" fill="#c77d36" stroke="#5a3d1e" stroke-width="3"/>
-        <!-- Inner shading -->
-        <rect x="15" y="35" width="90" height="50" rx="8" ry="8" fill="#e6a96d" />
-        <!-- Rim -->
-        <rect x="5" y="25" width="110" height="10" rx="5" ry="5" fill="#8b5e3c" stroke="#5a3d1e" stroke-width="2"/>
-        <!-- Handle -->
-        <path d="M 15 25 Q 60 -15 105 25" fill="none" stroke="#444" stroke-width="4"/>
-      </svg>
+        <svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="30" width="100" height="60" rx="10" ry="10" fill="#c77d36" stroke="#5a3d1e" stroke-width="3"/>
+            <rect x="15" y="35" width="90" height="50" rx="8" ry="8" fill="#e6a96d" />
+            <rect x="5" y="25" width="110" height="10" rx="5" ry="5" fill="#8b5e3c" stroke="#5a3d1e" stroke-width="2"/>
+            <path d="M 15 25 Q 60 -15 105 25" fill="none" stroke="#444" stroke-width="4"/>
+        </svg>
     </div>
     <div id="scoreboard">Score: 0 | Level: 1 | Target: A</div>
-  </div>
+</div>
 
-  <script>
-    const game = document.getElementById("game");
-    const basket = document.getElementById("basket");
-    const scoreboard = document.getElementById("scoreboard");
+<script>
+const game = document.getElementById("game");
+const basket = document.getElementById("basket");
+const scoreboard = document.getElementById("scoreboard");
+const cheer = document.getElementById("cheer");
 
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-    let targetLetter = "A";
-    let score = 0;
-    let level = 1;
-    let fallSpeed = 2;
-    let spawnCount = 0;
-    let basketX = window.innerWidth / 2 - 60;
-    basket.style.left = basketX + "px";
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+let targetLetter = "A";
+let score = 0;
+let level = 1;
+let fallSpeed = 2;
+let spawnCount = 0;
 
-    function spawnLetter() {
-      if (document.querySelectorAll(".letter").length >= 2) return;
+let basketX = window.innerWidth / 2 - basket.offsetWidth/2;
+basket.style.left = basketX + "px";
 
-      const div = document.createElement("div");
-      div.className = "letter";
+function spawnLetter() {
+    if (document.querySelectorAll(".letter").length >= 2) return;
 
-      spawnCount++;
-      if (spawnCount % 3 === 0) {
-        div.innerText = targetLetter;
-      } else {
-        div.innerText = letters[Math.floor(Math.random() * letters.length)];
-      }
+    const div = document.createElement("div");
+    div.className = "letter";
 
-      div.style.left = Math.random() * (window.innerWidth - 40) + "px";
-      div.style.top = "0px";
-      game.appendChild(div);
+    spawnCount++;
+    div.innerText = (spawnCount % 3 === 0) ? targetLetter : letters[Math.floor(Math.random()*letters.length)];
 
-      let pos = 0;
-      const interval = setInterval(() => {
+    div.style.left = Math.random() * (window.innerWidth - 40) + "px";
+    div.style.top = "0px";
+    game.appendChild(div);
+
+    let pos = 0;
+    const interval = setInterval(() => {
         pos += fallSpeed;
         div.style.top = pos + "px";
 
         const basketRect = basket.getBoundingClientRect();
         const letterRect = div.getBoundingClientRect();
 
-        if (
-          letterRect.bottom >= basketRect.top &&
-          letterRect.top <= basketRect.bottom &&
-          letterRect.right >= basketRect.left &&
-          letterRect.left <= basketRect.right
-        ) {
-          if (div.innerText === targetLetter) {
-            score++;
-            cheer.currentTime = 0; // Restart audio if needed
-            cheer.play();
+        if (letterRect.bottom >= basketRect.top &&
+            letterRect.top <= basketRect.bottom &&
+            letterRect.right >= basketRect.left &&
+            letterRect.left <= basketRect.right) {
 
-            if (score % 7 === 0) {
-              level++;
-              fallSpeed += 1;
-              changeBackground(level); 
+            if(div.innerText === targetLetter){
+                score++;
+                cheer.currentTime=0; cheer.play();
+
+                if(score % 7 === 0){
+                    level++;
+                    fallSpeed += 1;
+                    changeBackground(level);
+                }
+
+                targetLetter = letters[Math.floor(Math.random()*letters.length)];
+            } else {
+                score = Math.max(0, score - 1);
+                targetLetter = letters[Math.floor(Math.random()*letters.length)];
             }
-            // 🔹 change alphabet on every score update
-            targetLetter = letters[Math.floor(Math.random() * letters.length)];
-          } else {
-            score = Math.max(0, score - 1);
-            targetLetter = letters[Math.floor(Math.random() * letters.length)];
-          }
 
-          scoreboard.innerText = `Score: ${score} | Level: ${level} | Target: ${targetLetter}`;
-          game.removeChild(div);
-          clearInterval(interval);
+            scoreboard.innerText = `Score: ${score} | Level: ${level} | Target: ${targetLetter}`;
+            game.removeChild(div);
+            clearInterval(interval);
         }
 
-        if (pos > window.innerHeight - 50) {
-          game.removeChild(div);
-          clearInterval(interval);
+        if(pos > window.innerHeight - 50){
+            game.removeChild(div);
+            clearInterval(interval);
         }
-      }, 20);
-    }
 
-    setInterval(spawnLetter, 1500);
+    }, 20);
+}
 
-    function changeBackground(lvl) {
-      if (lvl === 2) {
-        game.style.background = "linear-gradient(to bottom, #ffcf71, #ff6f61, #ffe29f)";
-      } else if (lvl === 3) {
-        game.style.background = "linear-gradient(to bottom, #87e293, #ffffff, #a1c4fd)";
-      } else if (lvl === 4) {
-        game.style.background = "linear-gradient(to bottom, #8e2de2, #4a00e0, #fbc2eb)";
-      } else {
-        game.style.background = "linear-gradient(to bottom, #a8e6ff, #ffffff, #ffd6e0)";
-      }
-    }
+function changeBackground(lvl){
+    if(lvl===2) game.style.background="linear-gradient(to bottom, #ffcf71, #ff6f61, #ffe29f)";
+    else if(lvl===3) game.style.background="linear-gradient(to bottom, #87e293, #ffffff, #a1c4fd)";
+    else if(lvl===4) game.style.background="linear-gradient(to bottom, #8e2de2, #4a00e0, #fbc2eb)";
+    else game.style.background="linear-gradient(to bottom, #a8e6ff, #ffffff, #ffd6e0)";
+}
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowLeft") {
+setInterval(spawnLetter, 1500);
+
+// Keyboard control
+document.addEventListener("keydown", e => {
+    if(e.key==="ArrowLeft"){
         basketX = Math.max(0, basketX - 30);
         basket.style.left = basketX + "px";
-      } else if (e.key === "ArrowRight") {
-        basketX = Math.min(window.innerWidth - 120, basketX + 30);
+    } else if(e.key==="ArrowRight"){
+        basketX = Math.min(window.innerWidth - basket.offsetWidth, basketX + 30);
         basket.style.left = basketX + "px";
-      }
-    });
+    }
+});
 
-    let isDragging = false;
-    basket.addEventListener("mousedown", () => (isDragging = true));
-    window.addEventListener("mouseup", () => (isDragging = false));
-    window.addEventListener("mousemove", (e) => {
-      if (isDragging) {
-        basketX = e.clientX - basket.offsetWidth / 2;
-        basketX = Math.max(0, Math.min(window.innerWidth - 120, basketX));
+// Drag support
+let isDragging=false;
+basket.addEventListener("mousedown", ()=>isDragging=true);
+window.addEventListener("mouseup", ()=>isDragging=false);
+window.addEventListener("mousemove", e=>{
+    if(isDragging){
+        basketX = e.clientX - basket.offsetWidth/2;
+        basketX = Math.max(0, Math.min(window.innerWidth - basket.offsetWidth, basketX));
         basket.style.left = basketX + "px";
-      }
-    });
+    }
+});
 
-    basket.addEventListener("touchstart", () => (isDragging = true));
-    basket.addEventListener("touchend", () => (isDragging = false));
-    basket.addEventListener("touchmove", (e) => {
-      if (isDragging) {
+// Touch support
+basket.addEventListener("touchstart", ()=>isDragging=true);
+basket.addEventListener("touchend", ()=>isDragging=false);
+basket.addEventListener("touchmove", e=>{
+    if(isDragging){
         const touch = e.touches[0];
-        basketX = touch.clientX - basket.offsetWidth / 2;
-        basketX = Math.max(0, Math.min(window.innerWidth - 120, basketX));
+        basketX = touch.clientX - basket.offsetWidth/2;
+        basketX = Math.max(0, Math.min(window.innerWidth - basket.offsetWidth, basketX));
         basket.style.left = basketX + "px";
-      }
-    });
-  </script>
+    }
+});
+</script>
 </body>
 </html>
