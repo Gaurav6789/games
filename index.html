@@ -9,14 +9,14 @@
   <meta name="description" content="Play fun and educational games like Cartoon Catch, Puzzle Alphabet, Emoji Reaction, Cloud Catch, Memory Match, Alphabet Balloon Pop and more. Improve your memory and alphabet skills online!">
   <meta name="keywords" content="Alphabet games, Memory games, Educational games, Kids games, Online games, Fun learning, Puzzle games">
 
-  <!-- Open Graph / Social Sharing -->
+  <!-- Open Graph -->
   <meta property="og:title" content="Game Hub – Fun Alphabet & Memory Games">
   <meta property="og:description" content="Play educational online games like Cartoon Catch, Puzzle Alphabet, Cloud Catch, Memory Match, and more. Fun for kids and adults!">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yourwebsite.com/game-hub.html">
   <meta property="og:image" content="https://yourwebsite.com/assets/images/game-hub-thumbnail.png">
 
-  <!-- Twitter Card -->
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Game Hub – Fun Alphabet & Memory Games">
   <meta name="twitter:description" content="Play online games like Puzzle Alphabet, Cloud Catch, Memory Match, and more. Fun and educational!">
@@ -29,7 +29,7 @@
     "@type": "WebPage",
     "name": "Game Hub – Fun Alphabet & Memory Games",
     "description": "Play fun and educational games like Cartoon Catch, Puzzle Alphabet, Emoji Reaction, Cloud Catch, Memory Match, and more online.",
-    "url": "https://yourwebsite.com/game-hub.html",
+    "url": "https://play-zone.games/",
     "publisher": {
       "@type": "Organization",
       "name": "YourWebsite",
@@ -41,8 +41,12 @@
   }
   </script>
 
-  <link rel="icon" href="./assets/images/favicon.ico" type="image/x-icon">
+  <!-- Google AdSense Placeholder -->
+  <!-- Paste your adsense code here -->
+   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6306028737571143"
+     crossorigin="anonymous"></script>
 
+  <link rel="icon" href="./assets/images/favicon.ico" type="image/x-icon">
   <style>
     body {
       margin: 0;
@@ -59,49 +63,20 @@
       overflow-x: hidden;
       position: relative;
     }
-
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-image: radial-gradient(white 1px, transparent 1px);
-      background-size: 60px 60px;
-      animation: twinkle 5s infinite alternate;
-      opacity: 0.3;
-      z-index: 0;
-    }
-
-    @keyframes twinkle { from {opacity: 0.2;} to {opacity: 0.5;} }
-
-    h1 {
-      font-size: 3rem;
-      margin: 2rem 0;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-      animation: float 3s ease-in-out infinite;
-      z-index: 10;
-      position: relative;
-    }
-
-    @keyframes float { 0%,100% {transform: translateY(0);} 50% {transform: translateY(-10px);} }
-
+    h1 { font-size: 3rem; margin: 2rem 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
     .game-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
       width: 90%;
       max-width: 1000px;
-      z-index: 10;
-      position: relative;
       margin-bottom: 3rem;
     }
-
     .game-card {
       background: rgba(255, 255, 255, 0.15);
       border-radius: 20px;
@@ -112,124 +87,106 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.2);
       backdrop-filter: blur(10px);
     }
-
-    .game-card:hover {
-      transform: scale(1.08) rotate(-2deg);
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    .game-card h2 {
-      font-size: 1.3rem;
-      margin: 0;
-      color: #fff;
-    }
-
-    .emoji {
-      font-size: 2rem;
-      display: block;
-      margin-bottom: 0.5rem;
-      animation: bounce 2s infinite;
-    }
-
-    @keyframes bounce { 0%,100% {transform: translateY(0);} 50% {transform: translateY(-8px);} }
-
-    footer {
-      margin: 2rem 0;
-      font-size: 0.9rem;
-      opacity: 0.8;
-      z-index: 10;
-      position: relative;
-    }
-
-    .floating {
-      position: fixed;
-      font-size: 2.5rem;
-      animation: floatEmoji linear infinite;
-      opacity: 0.5;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    @keyframes floatEmoji { from {transform: translateY(100vh) scale(0.8); opacity:0;} to {transform: translateY(-10vh) scale(1.2); opacity:1;} }
+    .game-card:hover { transform: scale(1.08) rotate(-2deg); background: rgba(255, 255, 255, 0.25); }
+    .game-card h2 { font-size: 1.3rem; margin: 0; color: #fff; }
+    .emoji { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+    footer { margin: 2rem 0; font-size: 0.9rem; opacity: 0.9; text-align:center; }
+    footer a { color: #fff; margin: 0 5px; text-decoration: underline; }
+    section { max-width: 900px; margin: 2rem auto; padding: 1.5rem; border-radius: 12px; background: rgba(255,255,255,0.1); }
+    section h2 { color:#fff; margin-bottom:1rem; }
+    section h3 { color:#ffd; margin-top:1rem; }
   </style>
 </head>
 
 <body>
-  <audio id="cheer" autoplay>
-    <source src="game-49659.mp3" type="audio/mpeg">
-  </audio>
-
   <h1>🎮 Welcome to the Game Hub 🎉</h1>
-  <div class="game-list">
-    <div class="game-card" onclick="location.href='./Cartoon-Catch Game.html'">
-      <span class="emoji" role="img" aria-label="Teddy Bear">🧸</span>
-      <h2>Cartoon Catch Game – Level Up!</h2>
-    </div>
-        <div class="game-card" onclick="location.href='Beach-ball-alphabet-game.html'">
-      <span class="emoji" role="img" aria-label="Letters">🎣</span>
-      <h2>Alphabet Fishing Game</h2>
-    </div>
-    <div class="game-card" onclick="location.href='puzzle-alphabet-game.html'">
-      <span class="emoji" role="img" aria-label="Puzzle">🧩</span>
-      <h2>Puzzle Alphabet Game</h2>
-    </div>
-    <div class="game-card" onclick="location.href='Emoji-reaction-game.html'">
-      <span class="emoji" role="img" aria-label="Target">⏱️🎯</span>
-      <h2>Emoji Reaction Game</h2>
-    </div>
-    <div class="game-card" onclick="location.href='cloud-catch-game.html'">
-      <span class="emoji" role="img" aria-label="Cloud">☁️📚</span>
-      <h2>Alphabet Cloud Catch Game</h2>
-    </div>
-    <div class="game-card" onclick="location.href='Emoji-Learning Game-a-z.html'">
-      <span class="emoji" role="img" aria-label="Smiley">😀</span>
-      <h2>Emoji Learning Game: Alphabet Levels A–Z</h2>
-    </div>
-    <div class="game-card" onclick="location.href='Memory-match-Game.html'">
-      <span class="emoji" role="img" aria-label="Brain">🧠</span>
-      <h2>Memory Match Game</h2>
-    </div>
-    <!-- <div class="game-card" onclick="location.href='Alphabet-Balloon-Pop-Game.html'">
-      <span class="emoji" role="img" aria-label="Balloon">🎈</span>
-      <h2>Alphabet Balloon Pop Game</h2>
-    </div> -->
-    <div class="game-card" onclick="location.href='Alphabet-Balloon-Game.html'">
-      <span class="emoji" role="img" aria-label="Party">🎈</span>
-      <h2>Alphabet Balloon Game</h2>
-    </div>
-    <div class="game-card" onclick="location.href='Alphabet-Catcher-Game.html'">
-      <span class="emoji" role="img" aria-label="Letters">🔤</span>
-      <h2>Alphabet Catcher Game</h2>
-    </div>
-    <div class="game-card" onclick="location.href='Word-Builder-Game.html'">
-      <span class="emoji" role="img" aria-label="Memo">📝</span>
-      <h2>Word Builder Game</h2>
-    </div>
-    <div class="game-card" onclick="location.href='Missing-Letter-Game.html'">
-      <span class="emoji" role="img" aria-label="Question Mark">❓</span>
-      <h2>Missing Letter Game</h2>
-    </div>
+  
+  <p style="max-width:900px; text-align:center; padding:1rem;">
+    Discover free fun and educational games for kids and adults. 
+    Strengthen your memory, sharpen your alphabet recognition, and enjoy interactive puzzles. 
+    Perfect for parents, teachers, and learners who want to combine <strong>fun with learning</strong>.
+  </p>
 
-    <div class="game-card" onclick="location.href='Jello-Letter-Hunt.html'">
-      <span class="emoji" role="img" aria-label="Beach">🏖️</span>
-      <h2>Jello Letter Hunt</h2>
-    </div>
+  <!-- Ad Block (replace with adsense code) -->
+  <div class="ad-block" style="margin:20px 0; text-align:center;">
+    <!-- AdSense code here -->
   </div>
 
-  <footer>✨ Click a game to start playing ✨</footer>
+  <!-- Game Cards -->
+  <div class="game-list">
+    <div class="game-card" onclick="location.href='./Cartoon-Catch Game.html'"><span class="emoji">🧸</span><h2>Cartoon Catch Game – Level Up!</h2></div>
+    <div class="game-card" onclick="location.href='Beach-ball-alphabet-game.html'"><span class="emoji">🎣</span><h2>Alphabet Fishing Game</h2></div>
+    <div class="game-card" onclick="location.href='puzzle-alphabet-game.html'"><span class="emoji">🧩</span><h2>Puzzle Alphabet Game</h2></div>
+    <div class="game-card" onclick="location.href='Emoji-reaction-game.html'"><span class="emoji">⏱️🎯</span><h2>Emoji Reaction Game</h2></div>
+    <div class="game-card" onclick="location.href='cloud-catch-game.html'"><span class="emoji">☁️📚</span><h2>Alphabet Cloud Catch Game</h2></div>
+    <div class="game-card" onclick="location.href='Emoji-Learning Game-a-z.html'"><span class="emoji">😀</span><h2>Emoji Learning Game: Alphabet Levels A–Z</h2></div>
+    <div class="game-card" onclick="location.href='Memory-match-Game.html'"><span class="emoji">🧠</span><h2>Memory Match Game</h2></div>
+    <div class="game-card" onclick="location.href='Alphabet-Balloon-Game.html'"><span class="emoji">🎈</span><h2>Alphabet Balloon Game</h2></div>
+    <div class="game-card" onclick="location.href='Alphabet-Catcher-Game.html'"><span class="emoji">🔤</span><h2>Alphabet Catcher Game</h2></div>
+    <div class="game-card" onclick="location.href='Word-Builder-Game.html'"><span class="emoji">📝</span><h2>Word Builder Game</h2></div>
+    <div class="game-card" onclick="location.href='Missing-Letter-Game.html'"><span class="emoji">❓</span><h2>Missing Letter Game</h2></div>
+    <div class="game-card" onclick="location.href='Jello-Letter-Hunt.html'"><span class="emoji">🏖️</span><h2>Jello Letter Hunt</h2></div>
+  </div>
+
+  <!-- FAQ Section -->
+  <section id="faq">
+    <h2>❓ Frequently Asked Questions</h2>
+    <h3>Are these games free?</h3>
+    <p>Yes, all games on Game Hub are completely free to play online.</p>
+    <h3>Do these games help with learning?</h3>
+    <p>Absolutely! Games like Alphabet Balloon Pop and Puzzle Alphabet are designed to improve spelling, memory, and problem-solving skills.</p>
+    <h3>Can I play on mobile?</h3>
+    <p>Yes, our games are mobile-friendly and work on phones, tablets, and desktops.</p>
+  </section>
+
+  <!-- About Us -->
+  <section id="about">
+    <h2>ℹ️ About Us</h2>
+    <p>Game Hub is a free online platform dedicated to making learning fun. We design alphabet and memory games that boost creativity, focus, and problem-solving skills for both kids and adults.</p>
+  </section>
+
+  <!-- Privacy Policy -->
+  <section id="privacy">
+    <h2>🔒 Privacy Policy</h2>
+    <p>We respect your privacy. Game Hub does not collect personal data without your consent. Some ads may use cookies to provide relevant experiences. By using our site, you agree to our cookie and ad policy.</p>
+  </section>
+
+  <!-- Terms & Conditions -->
+  <section id="terms">
+    <h2>📜 Terms & Conditions</h2>
+    <p>By accessing Game Hub, you agree to use the site responsibly. All games are provided for fun and educational purposes. We are not responsible for third-party links or ads shown on this site.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    ✨ Click a game to start playing ✨ <br>
+    <a href="#privacy">Privacy Policy</a> | 
+    <a href="#terms">Terms & Conditions</a> | 
+    <a href="#about">About Us</a>
+  </footer>
 
   <script>
+    // floating emoji animation
     const emojis = ["🎈","😀","🧸","🔤","📝","❓","🎉"];
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 20; i++) {
       const span = document.createElement("span");
       span.classList.add("floating");
-      span.setAttribute("role","img");
-      span.setAttribute("aria-label","Floating Emoji");
       span.innerText = emojis[Math.floor(Math.random() * emojis.length)];
       span.style.left = Math.random() * 100 + "vw";
-      span.style.animationDuration = 4 + Math.random() * 6 + "s";
+      span.style.position = "fixed";
+      span.style.bottom = "-50px";
+      span.style.fontSize = "2rem";
+      span.style.opacity = "0.5";
+      span.style.animation = `floatEmoji ${4 + Math.random() * 6}s linear infinite`;
       document.body.appendChild(span);
     }
   </script>
+
+  <style>
+    @keyframes floatEmoji { 
+      from { transform: translateY(0); opacity:0; } 
+      to { transform: translateY(-110vh); opacity:1; } 
+    }
+  </style>
 </body>
 </html>

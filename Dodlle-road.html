@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Doodle Road</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    canvas {
+      background: #fdf6e3;
+      display: block;
+      margin: 0 auto;
+      border: 2px solid #333;
+    }
+    body {
+      background: #eee;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    /* Mobile Buttons */
+    .mobile-controls {
+      display: none;
+      margin-top: 15px;
+    }
+
+    .btn {
+      display: inline-block;
+      width: 100px;
+      height: 50px;
+      margin: 0 10px;
+      font-size: 24px;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-controls {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Doodle Road</h1>
+<canvas id="gameCanvas" width="400" height="600"></canvas>
+<p>Use ← → or A / D to move. Avoid black blocks!</p>
+
+<div class="mobile-controls">
+  <button class="btn" id="leftBtn">⬅️</button>
+  <button class="btn" id="rightBtn">➡️</button>
+</div>
+
+<script>
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  const player = {
+    x: 180,
+    y: 500,
+    width: 40,
+    height: 40,
+    color: "#0077cc",
+    speed: 5
+  };
+
+  let keys = {};
+  let touchLeft = false;
+  let touchRight = false;
+
+  let obstacles = [];
+  let score = 0;
+  let highScore = parseInt(localStorage.getItem("doodleHighScore")) || 0;
+  let frame = 0;
+  let gameOver = false;
+
+  // Keyboard controls
+  document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
+  document.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
+
+  // Mobile controls
+  document.getElementById("leftBtn").addEventListener("touchstart", () => touchLeft = true);
+  document.getElementById("leftBtn").addEventListener("touchend", () => touchLeft = false);
+  document.getElementById("rightBtn").addEventListener("touchstart", () => touchRight = true);
+  document.getElementById("rightBtn").addEventListener("touchend", () => touchRight = false);
+
+  function drawPlayer() {
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+  }
+
+  function movePlayer() {
+    if (keys["arrowleft"] || keys["a"] || touchLeft) {
+      player.x -= player.speed;
+    }
+    if (keys["arrowright"] || keys["d"] || touchRight) {
+      player.x += player.speed;
+    }
+    // Keep inside canvas
+    player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
+  }
+
+  function createObstacle() {
+    const obsWidth = Math.random() * 100 + 40;
+    const obsX = Math.random() * (canvas.width - obsWidth);
+    obstacles.push({ x: obsX, y: -50, width: obsWidth, height: 20 });
+  }
+
+  function updateObstacles() {
+    for (let obs of obstacles) {
+      obs.y += 4;
+    }
+    obstacles = obstacles.filter(obs => obs.y < canvas.height + 50);
+  }
+
+  function drawObstacles() {
+    ctx.fillStyle = "#111";
+    for (let obs of obstacles) {
+      ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+    }
+  }
+
+  function checkCollisions() {
+    for (let obs of obstacles) {
+      if (
+        player.x < obs.x + obs.width &&
+        player.x + player.width > obs.x &&
+        player.y < obs.y + obs.height &&
+        player.y + player.height > obs.y
+      ) {
+        gameOver = true;
+      }
+    }
+  }
+
+  function drawScore() {
+    ctx.fillStyle = "#333";
+    ctx.font = "20px sans-serif";
+    ctx.fillText("Score: " + score, 10, 30);
+    ctx.fillText("High Score: " + highScore, 10, 60);
+  }
+
+  function showGameOver() {
+    // Save high score
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem("doodleHighScore", highScore);
+    }
+
+    ctx.fillStyle = "rgba(0,0,0,0.6)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#fff";
+    ctx.font = "36px sans-serif";
+    ctx.fillText("Game Over", 110, 280);
+    ctx.font = "24px sans-serif";
+    ctx.fillText("Score: " + score, 140, 320);
+    ctx.fillText("High Score: " + highScore, 110, 360);
+  }
+
+  function gameLoop() {
+    if (gameOver) {
+      showGameOver();
+      return;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    movePlayer();
+    updateObstacles();
+
+    if (frame % 60 === 0) {
+      createObstacle();
+      score++;
+    }
+
+    drawPlayer();
+    drawObstacles();
+    drawScore();
+    checkCollisions();
+
+    frame++;
+    requestAnimationFrame(gameLoop);
+  }
+
+  gameLoop();
+</script>
+
+</body>
+</html>
