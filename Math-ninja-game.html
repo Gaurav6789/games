@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Math Ninja Mixed Arithmetic</title>
+<style>
+:root{
+  --bg:#f0f9ff; --accent:#8bc34a; --muted:#666;
+  --card:rgba(255,255,255,0.95); --radius:12px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background: var(--bg);
+  font-family:"Comic Sans MS", system-ui, -apple-system,"Segoe UI",Roboto,Arial;
+  display:flex; align-items:center; justify-content:center; padding:16px;
+}
+.container{
+  width:100%; max-width:980px;
+  background: linear-gradient(180deg,#ffffffcc,#ffffffaa);
+  border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.12);
+  padding:18px; display:flex; flex-direction:column; align-items:center; gap:12px;
+}
+header{
+  width:100%; display:flex; flex-direction:column; align-items:center; gap:8px;
+}
+#level{font-size: clamp(1.1rem,2.2vw,1.5rem); color:#222; font-weight:800; margin:0;}
+#problem{font-size: clamp(1.4rem,3.5vw,2.5rem); color:#111; margin:0; text-shadow:0 1px 0 #fff;}
+main{width:100%; display:flex; flex-direction:column; align-items:center; gap:14px;}
+#options{
+  width:100%; display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(84px,1fr));
+  gap:12px; justify-items:center; align-items:center; padding:8px;
+}
+.option-btn{
+  border:4px solid transparent; background: var(--card);
+  border-radius:14px; width:100%; min-height:84px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+  box-shadow:0 8px 18px rgba(0,0,0,0.08); font-size: clamp(2rem,6vw,3rem);
+  padding:8px; user-select:none; font-weight:700;
+}
+.option-btn:active{ transform: scale(.96); }
+.option-btn:hover{ border-color: color-mix(in srgb,var(--accent) 30%,transparent); }
+.option-btn[aria-pressed="true"]{ border-color:#16a34a; box-shadow:0 10px 24px rgba(22,163,74,0.10); }
+.status{ display:flex; gap:8px; align-items:center; justify-content:center; width:100%; }
+.badge{ background: var(--card); padding:8px 12px; border-radius:999px; font-weight:800; box-shadow:0 6px 14px rgba(0,0,0,0.06); }
+.controls{ display:flex; gap:10px; justify-content:center; width:100%; margin-top:4px; }
+.btn{ padding:8px 12px; font-weight:800; border-radius:10px; border:0; cursor:pointer; background:#111827; color:#fff; box-shadow:0 8px 18px rgba(0,0,0,0.08); font-size: clamp(.9rem,2vw,1.1rem);}
+.btn.secondary{background:#f59e0b;color:#111827;}
+footer{ font-size:.9rem; color:var(--muted); margin-top:4px;}
+</style>
+</head>
+<body>
+<div class="container" role="main" aria-label="Math Ninja Mixed Arithmetic">
+  <header>
+    <div id="level" aria-live="polite">Level 1</div>
+    <div id="problem" aria-live="polite">Loading...</div>
+  </header>
+
+  <main>
+    <section id="options" aria-label="number choices"></section>
+    <div class="status" aria-hidden="false">
+      <div class="badge" id="progress">1 / 60</div>
+      <div class="badge" id="score">Score: 0</div>
+    </div>
+    <div class="controls">
+      <button class="btn secondary" id="skipBtn">Skip ▶</button>
+      <button class="btn secondary" id="restartBtn">Restart</button>
+    </div>
+  </main>
+  <footer>Tip: Easy arithmetic for kids. Tab/Enter works too.</footer>
+</div>
+
+<audio id="cheer">
+  <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" type="audio/ogg">
+  <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const levelEl=document.getElementById('level');
+const problemEl=document.getElementById('problem');
+const optionsEl=document.getElementById('options');
+const progressEl=document.getElementById('progress');
+const scoreEl=document.getElementById('score');
+const restartBtn=document.getElementById('restartBtn');
+const skipBtn=document.getElementById('skipBtn');
+const cheer=document.getElementById('cheer');
+
+let currentLevel=1;
+let score=0;
+const totalLevels=60;
+let correctAnswer=0;
+
+function getRandom(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+function generateProblem(level){
+  let a,b,op,symbol;
+  let maxNum;
+  if(level<=20){ maxNum=10; }
+  else if(level<=40){ maxNum=20; }
+  else{ maxNum=50; }
+
+  const ops=['+','-','×'];
+  op=ops[getRandom(0,ops.length-1)];
+  a=getRandom(1,maxNum);
+  b=getRandom(1,maxNum);
+
+  // ensure subtraction is non-negative
+  if(op==='-' && b>a){ [a,b]=[b,a]; }
+  // multiplication adjust for easy range
+  if(op==='×' && level<=20) b=getRandom(1,10);
+
+  symbol=(op==='×')?'*':op;
+  correctAnswer=eval(`${a}${symbol}${b}`);
+  problemEl.textContent=`${a} ${op} ${b} = ?`;
+  generateOptions(correctAnswer, maxNum);
+  progressEl.textContent=`${currentLevel} / ${totalLevels}`;
+  levelEl.textContent=`Level ${currentLevel}`;
+}
+
+function generateOptions(correct, maxNum){
+  const opts=[correct];
+  while(opts.length<4){
+    let n=getRandom(Math.max(1,correct-5), correct+5);
+    if(!opts.includes(n)) opts.push(n);
+  }
+  opts.sort(()=>Math.random()-0.5);
+  optionsEl.innerHTML='';
+  opts.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='option-btn'; btn.textContent=opt;
+    btn.setAttribute('tabindex','0');
+    btn.addEventListener('click',()=>checkAnswer(opt,btn));
+    btn.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){ e.preventDefault(); btn.click(); }});
+    optionsEl.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected,btn){
+  const allBtns=optionsEl.querySelectorAll('.option-btn');
+  allBtns.forEach(b=>b.disabled=true);
+  if(selected===correctAnswer){
+    btn.setAttribute('aria-pressed','true');
+    score++; scoreEl.textContent=`Score: ${score}`;
+    try{ cheer.currentTime=0; cheer.play(); }catch(e){}
+    setTimeout(nextLevel,500);
+  }else{
+    btn.style.borderColor='red';
+    setTimeout(()=>{allBtns.forEach(b=>b.disabled=false); btn.style.borderColor='';},500);
+  }
+}
+
+function nextLevel(){
+  if(currentLevel<totalLevels){ currentLevel++; generateProblem(currentLevel); } else finishGame();
+}
+
+function skipLevel(){ nextLevel(); }
+
+function finishGame(){
+  problemEl.textContent='🎉 Well Done!'; optionsEl.innerHTML='';
+  levelEl.textContent=`Score: ${score} / ${totalLevels}`;
+}
+
+restartBtn.addEventListener('click',()=>{
+  currentLevel=1; score=0; generateProblem(currentLevel);
+});
+
+skipBtn.addEventListener('click', skipLevel);
+
+generateProblem(currentLevel);
+</script>
+</body>
+</html>

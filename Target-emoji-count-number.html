@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Count the Target Emoji Game</title>
+<meta name="description" content="Count the target emoji — fun counting game for children.">
+<style>
+  body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: #f0f9ff;
+    display:flex;
+    justify-content:center;
+    padding:20px;
+  }
+
+  .game-container{
+    max-width: 950px;
+    width: 100%;
+    background: #ffffffcc;
+    border-radius: 16px;
+    padding: 16px;
+    text-align:center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+
+  h1{
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #074f6b;
+  }
+
+  #level, #score{
+    font-weight: bold;
+    margin: 8px 0;
+    color: #074f6b;
+  }
+
+  #targetBox{
+    background: #e0f7fa;
+    border-radius: 12px;
+    padding: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    color:#074f6b;
+    margin-top:5px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  #emojiContainer{
+    display:flex;
+    justify-content:center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 16px 0;
+    min-height: 100px;
+  }
+
+  .emoji-box{
+    width: 60px;
+    height: 60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 2rem;
+    border-radius: 12px;
+    background: #fff4;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    animation: float 1.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes float{
+    0%{ transform: translateY(0px); }
+    100%{ transform: translateY(-8px); }
+  }
+
+  #options{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content:center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .btn{
+    padding: 10px 16px;
+    font-size: 1rem;
+    border:none;
+    border-radius: 10px;
+    cursor:pointer;
+    background: #074f6b;
+    color:#fff;
+    font-weight:bold;
+    min-width: 40px;
+    transition:0.3s;
+  }
+
+  .btn:hover{background:#05607f;}
+
+  .btn.secondary{ background: #f59e0b; color:#111827; }
+  .btn.secondary:hover{ background: #f6ad30; }
+
+  footer{ margin-top:10px; font-size:0.9rem; color:#666; }
+</style>
+</head>
+<body>
+<div class="game-container">
+  <h1>Count the Target Emoji!</h1>
+  <div id="level">Level: 1</div>
+  <div id="score">Score: 0</div>
+
+  <div id="targetBox">
+    Count all <span id="targetEmoji" style="font-size:2rem;"></span>
+  </div>
+
+  <div id="emojiContainer"></div>
+  <div id="options"></div>
+  <div class="controls" style="margin-top:10px;">
+    <button class="btn secondary" id="skipBtn">Skip</button>
+  </div>
+  <footer>Tap the correct number of target emojis. Use Skip if unsure.</footer>
+</div>
+
+<script>
+const totalLevels = 30;
+let currentLevel = 1;
+let score = 0;
+
+// Emoji options
+const emojiList = ['🍎','🍌','🍇','🍊','🐱','🐶','🐟','🐝','🍓','🍒'];
+
+const emojiContainer = document.getElementById('emojiContainer');
+const optionsDiv = document.getElementById('options');
+const levelDiv = document.getElementById('level');
+const scoreDiv = document.getElementById('score');
+const skipBtn = document.getElementById('skipBtn');
+const targetEmojiSpan = document.getElementById('targetEmoji');
+
+function getLevelConfig(level){
+  let maxTypes = 2, maxCount=5;
+  if(level>=11 && level<=20){ maxTypes=3; maxCount=10; }
+  if(level>=21){ maxTypes=4; maxCount=15; }
+  return { maxTypes, maxCount };
+}
+
+function startLevel(){
+  emojiContainer.innerHTML = '';
+  optionsDiv.innerHTML = '';
+
+  const { maxTypes, maxCount } = getLevelConfig(currentLevel);
+
+  // pick random emojis
+  const typesCount = Math.min(maxTypes, emojiList.length);
+  let emojis = shuffle(emojiList.slice()).slice(0, typesCount);
+
+  // pick target
+  const targetEmoji = emojis[Math.floor(Math.random()*emojis.length)];
+  targetEmojiSpan.textContent = targetEmoji;
+
+  // pick number of target emojis
+  const targetCount = Math.floor(Math.random()*maxCount)+1;
+
+  let allEmojis = [];
+  emojis.forEach(e=>{
+    let count = (e===targetEmoji)? targetCount : Math.floor(Math.random()*maxCount)+1;
+    for(let i=0;i<count;i++) allEmojis.push(e);
+  });
+
+  allEmojis = shuffle(allEmojis);
+
+  // render emojis horizontally
+  allEmojis.forEach(e=>{
+    const box = document.createElement('div');
+    box.className='emoji-box';
+    box.textContent = e;
+    emojiContainer.appendChild(box);
+  });
+
+  // render options buttons
+  for(let i=1;i<=Math.min(maxCount, targetCount+5);i++){
+    const btn = document.createElement('button');
+    btn.className='btn';
+    btn.textContent = i;
+    btn.addEventListener('click',()=> checkAnswer(i,targetCount));
+    optionsDiv.appendChild(btn);
+  }
+
+  levelDiv.textContent = `Level: ${currentLevel}`;
+}
+
+function checkAnswer(selected, correct){
+  if(selected===correct) score++;
+  scoreDiv.textContent = `Score: ${score}`;
+  nextLevel();
+}
+
+function nextLevel(){
+  currentLevel++;
+  if(currentLevel>totalLevels){
+    alert(`Game Over! Your Score: ${score}/${totalLevels}`);
+    currentLevel=1; score=0;
+  }
+  startLevel();
+}
+
+skipBtn.addEventListener('click', nextLevel);
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// start first level
+startLevel();
+</script>
+</body>
+</html>
