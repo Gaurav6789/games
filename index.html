@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Game Hub – Play & Learn | Fun Alphabet & Memory Games</title>
 
   <!-- SEO Meta -->
@@ -22,7 +22,7 @@
   <meta name="twitter:description" content="Play online games like Puzzle Alphabet, Cloud Catch, Memory Match, and more. Fun and educational!">
   <meta name="twitter:image" content="https://yourwebsite.com/assets/images/game-hub-thumbnail.png">
 
-  <!-- Structured Data (JSON-LD) -->
+  <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -41,13 +41,10 @@
   }
   </script>
 
-  <!-- Google AdSense Placeholder -->
-  <!-- Paste your adsense code here -->
-   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6306028737571143"
-     crossorigin="anonymous"></script>
+  <link rel="icon" href="./assets/images/favicon.ico" type="image/x-icon" />
 
-  <link rel="icon" href="./assets/images/favicon.ico" type="image/x-icon">
   <style>
+    /* Base layout */
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
@@ -63,20 +60,39 @@
       overflow-x: hidden;
       position: relative;
     }
+
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    h1 { font-size: 3rem; margin: 2rem 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
+
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin: 1.5rem 1rem;
+      text-align: center;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    }
+
+    p {
+      line-height: 1.6;
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Game Grid */
     .game-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      width: 90%;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      width: 92%;
       max-width: 1000px;
-      margin-bottom: 3rem;
+      margin: 2rem auto 3rem;
     }
+
     .game-card {
       background: rgba(255, 255, 255, 0.15);
       border-radius: 20px;
@@ -87,41 +103,113 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.2);
       backdrop-filter: blur(10px);
     }
-    .game-card:hover { transform: scale(1.08) rotate(-2deg); background: rgba(255, 255, 255, 0.25); }
-    .game-card h2 { font-size: 1.3rem; margin: 0; color: #fff; }
-    .emoji { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
-    footer { margin: 2rem 0; font-size: 0.9rem; opacity: 0.9; text-align:center; }
-    footer a { color: #fff; margin: 0 5px; text-decoration: underline; }
-    section { max-width: 900px; margin: 2rem auto; padding: 1.5rem; border-radius: 12px; background: rgba(255,255,255,0.1); }
-    section h2 { color:#fff; margin-bottom:1rem; }
-    section h3 { color:#ffd; margin-top:1rem; }
+
+    .game-card:hover {
+      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .game-card h2 {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      margin: 0;
+      color: #fff;
+    }
+
+    .emoji {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    section {
+      max-width: 900px;
+      margin: 1.5rem auto;
+      padding: 1.5rem;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.1);
+      width: 90%;
+    }
+
+    section h2 {
+      color: #fff;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    section h3 {
+      color: #ffd;
+      margin-top: 1rem;
+    }
+
+    footer {
+      margin: 2rem 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    footer a {
+      color: #fff;
+      margin: 0 5px;
+      text-decoration: underline;
+    }
+
+    /* Floating Emoji Animation */
+    @keyframes floatEmoji {
+      from { transform: translateY(0); opacity: 0; }
+      to { transform: translateY(-110vh); opacity: 1; }
+    }
+
+    /* Responsive Layout */
+    @media (max-width: 768px) {
+      .game-list {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.8rem;
+      }
+      .game-card {
+        padding: 1rem;
+      }
+      section {
+        padding: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+        margin: 1rem 0.5rem;
+      }
+      .game-list {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+      .game-card {
+        width: 100%;
+        padding: 1rem;
+      }
+      .emoji {
+        font-size: 1.8rem;
+      }
+    }
   </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6306028737571143"
+     crossorigin="anonymous"></script>
 </head>
 
 <body>
   <h1>🎮 Welcome to the Game Hub 🎉</h1>
-  
-  <p style="max-width:900px; text-align:center; padding:1rem;">
+
+  <p>
     Discover free fun and educational games for kids and adults. 
     Strengthen your memory, sharpen your alphabet recognition, and enjoy interactive puzzles. 
     Perfect for parents, teachers, and learners who want to combine <strong>fun with learning</strong>.
   </p>
 
-  <!-- Ad Block (replace with adsense code) -->
-  <div class="ad-block" style="margin:20px 0; text-align:center;">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6306028737571143"
-        crossorigin="anonymous"></script>
-    <!-- add-zone -->
-    <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="ca-pub-6306028737571143"
-        data-ad-slot="3222075345"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-    <!-- AdSense code here -->
+  <!-- Ad Block -->
+  <div class="ad-block" style="margin:20px 0; text-align:center; width:100%;">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6306028737571143" data-ad-slot="3222075345" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
 
   <!-- Game Cards -->
@@ -139,140 +227,88 @@
     <div class="game-card" onclick="location.href='Missing-Letter-Game.html'"><span class="emoji">❓</span><h2>Missing Letter Game</h2></div>
     <div class="game-card" onclick="location.href='Jello-Letter-Hunt.html'"><span class="emoji">🏖️</span><h2>Jello Letter Hunt</h2></div>
   </div>
-    <!-- Math Games Section -->
+
+  <!-- Math Games Section -->
   <section id="math-games">
     <h2>➕ Math Learning Games</h2>
-    <p style="text-align:center; max-width:800px; margin:0 auto 1.5rem;">
+    <p>
       Sharpen your math skills with fun and interactive number-based games. 
       Great for kids and learners who want to practice addition, subtraction, multiplication, and problem-solving while playing.
     </p>
 
     <div class="game-list">
-      <div class="game-card" onclick="location.href='Number-cloud-game.html'">
-        <span class="emoji">🔢</span>
-        <h2>Cloud Number Game</h2>
-      </div>
-      <div class="game-card" onclick="location.href='Count-number.html'">
-        <span class="emoji">🧮</span>
-        <h2>Count numbers</h2>
-      </div>
-      <div class="game-card" onclick="location.href='Math-ninja-game.html'">
-        <span class="emoji">📊</span>
-        <h2>Nath Ninja Game</h2>
-      </div>
-      <div class="game-card" onclick="location.href='Target-emoji-count-number.html'">
-        <span class="emoji">➗</span>
-        <h2>Target Emoji Count</h2>
-      </div>
-      <div class="game-card" onclick="location.href='Shape-count-number.html'">
-        <span class="emoji">✖️</span>
-        <h2>shape count game</h2>
-      </div>
+      <div class="game-card" onclick="location.href='Number-cloud-game.html'"><span class="emoji">🔢</span><h2>Cloud Number Game</h2></div>
+      <div class="game-card" onclick="location.href='Count-number.html'"><span class="emoji">🧮</span><h2>Count Numbers</h2></div>
+      <div class="game-card" onclick="location.href='Math-ninja-game.html'"><span class="emoji">📊</span><h2>Math Ninja Game</h2></div>
+      <div class="game-card" onclick="location.href='Target-emoji-count-number.html'"><span class="emoji">➗</span><h2>Target Emoji Count</h2></div>
+      <div class="game-card" onclick="location.href='Shape-count-number.html'"><span class="emoji">✖️</span><h2>Shape Count Game</h2></div>
     </div>
   </section>
 
-
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6306028737571143"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-format="autorelaxed"
-     data-ad-client="ca-pub-6306028737571143"
-     data-ad-slot="8832676439"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-  <!-- FAQ Section -->
-<section id="faq">
-  <h2>❓ Frequently Asked Questions</h2>
-  
-  <h3>Are the games on Play Zone free?</h3>
-  <p>Yes! All games on Play Zone are completely free to play. You don’t need to download anything or create an account.</p>
-  
-  <h3>Do these games help with learning?</h3>
-  <p>Absolutely. Our alphabet, puzzle, and memory games are designed to improve spelling, focus, problem-solving, and memory skills while keeping it fun and engaging.</p>
-  
-  <h3>Can I play these games on mobile?</h3>
-  <p>Yes. Play Zone games are mobile-friendly and work smoothly on smartphones, tablets, and desktops.</p>
-  
-  <h3>Do I need to sign up or provide personal details?</h3>
-  <p>No sign-up is required. Just click on a game and start playing instantly.</p>
-</section>
+  <!-- FAQ -->
+  <section id="faq">
+    <h2>❓ Frequently Asked Questions</h2>
+    <h3>Are the games on Play Zone free?</h3>
+    <p>Yes! All games on Play Zone are completely free to play. You don’t need to download anything or create an account.</p>
+    <h3>Do these games help with learning?</h3>
+    <p>Absolutely. Our alphabet, puzzle, and memory games are designed to improve spelling, focus, problem-solving, and memory skills while keeping it fun and engaging.</p>
+    <h3>Can I play these games on mobile?</h3>
+    <p>Yes. Play Zone games are mobile-friendly and work smoothly on smartphones, tablets, and desktops.</p>
+    <h3>Do I need to sign up or provide personal details?</h3>
+    <p>No sign-up is required. Just click on a game and start playing instantly.</p>
+  </section>
 
   <!-- About Us -->
-<section id="about">
-  <h2>ℹ️ About Us</h2>
-  <p>Welcome to <strong>Play Zone</strong> – a free online platform where learning meets fun. 
-     Our goal is to make education exciting for kids and adults through interactive HTML5 games. 
-     From alphabet adventures to memory challenges, every game is designed to boost creativity, focus, and brainpower.</p>
-</section>
-
+  <section id="about">
+    <h2>ℹ️ About Us</h2>
+    <p>Welcome to <strong>Play Zone</strong> – a free online platform where learning meets fun. 
+       Our goal is to make education exciting for kids and adults through interactive HTML5 games. 
+       From alphabet adventures to memory challenges, every game is designed to boost creativity, focus, and brainpower.</p>
+  </section>
 
   <!-- Privacy Policy -->
-<section id="privacy">
-  <h2>🔒 Privacy Policy</h2>
-  <p>Your privacy is important to us. Play Zone does not collect personal information from players. 
-     However, third-party services such as Google AdSense may use cookies to display relevant ads based on your interests. 
-     By using our website, you consent to the use of cookies for providing a better browsing experience.</p>
-  
-  <p>If you wish, you can disable cookies through your browser settings. For more details, 
-     please visit <a href="https://policies.google.com/technologies/ads" target="_blank">Google’s Advertising Policies</a>.</p>
-</section>
-
-  
+  <section id="privacy">
+    <h2>🔒 Privacy Policy</h2>
+    <p>Your privacy is important to us. Play Zone does not collect personal information from players. 
+       However, third-party services such as Google AdSense may use cookies to display relevant ads based on your interests. 
+       By using our website, you consent to the use of cookies for providing a better browsing experience.</p>
+    <p>If you wish, you can disable cookies through your browser settings. For more details, 
+       please visit <a href="https://policies.google.com/technologies/ads" target="_blank">Google’s Advertising Policies</a>.</p>
+  </section>
 
   <!-- Terms & Conditions -->
-<section id="terms">
-  <h2>📜 Terms & Conditions</h2>
-  <p>By accessing <strong>Play Zone</strong>, you agree to use our website responsibly and for entertainment purposes only. 
-     All games are provided “as is” without warranties. We are not responsible for third-party content, external links, or advertisements displayed on our site.</p>
-  
-  <p>Users must not copy, distribute, or resell our games without permission. Play Zone reserves the right to update these terms at any time.</p>
-</section>
+  <section id="terms">
+    <h2>📜 Terms & Conditions</h2>
+    <p>By accessing <strong>Play Zone</strong>, you agree to use our website responsibly and for entertainment purposes only. 
+       All games are provided “as is” without warranties. We are not responsible for third-party content, external links, or advertisements displayed on our site.</p>
+    <p>Users must not copy, distribute, or resell our games without permission. Play Zone reserves the right to update these terms at any time.</p>
+  </section>
 
   <!-- Footer -->
   <footer>
-    ✨ Click a game to start playing ✨ <br>
-    <a href="#privacy">Privacy Policy</a> | 
-    <a href="#terms">Terms & Conditions</a> | 
+    ✨ Click a game to start playing ✨ <br />
+    <a href="#privacy">Privacy Policy</a> |
+    <a href="#terms">Terms & Conditions</a> |
     <a href="#about">About Us</a>
   </footer>
 
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6306028737571143"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-6306028737571143"
-     data-ad-slot="4343585327"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
   <script>
-    // floating emoji animation
-    const emojis = ["🎈","😀","🧸","🔤","📝","❓","🎉"];
-    for (let i = 0; i < 20; i++) {
-      const span = document.createElement("span");
-      span.classList.add("floating");
-      span.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-      span.style.left = Math.random() * 100 + "vw";
-      span.style.position = "fixed";
-      span.style.bottom = "-50px";
-      span.style.fontSize = "2rem";
-      span.style.opacity = "0.5";
-      span.style.animation = `floatEmoji ${4 + Math.random() * 6}s linear infinite`;
-      document.body.appendChild(span);
+    // Floating emoji animation (disabled on very small screens)
+    if (window.innerWidth > 600) {
+      const emojis = ["🎈","😀","🧸","🔤","📝","❓","🎉"];
+      for (let i = 0; i < 20; i++) {
+        const span = document.createElement("span");
+        span.classList.add("floating");
+        span.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        span.style.left = Math.random() * 100 + "vw";
+        span.style.position = "fixed";
+        span.style.bottom = "-50px";
+        span.style.fontSize = "2rem";
+        span.style.opacity = "0.5";
+        span.style.animation = `floatEmoji ${4 + Math.random() * 6}s linear infinite`;
+        document.body.appendChild(span);
+      }
     }
   </script>
-
-  <style>
-    @keyframes floatEmoji { 
-      from { transform: translateY(0); opacity:0; } 
-      to { transform: translateY(-110vh); opacity:1; } 
-    }
-  </style>
 </body>
 </html>
