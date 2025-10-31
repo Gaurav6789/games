@@ -1,123 +1,215 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6306028737571143"
-     crossorigin="anonymous"></script>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Color & Shape Count — Count the Target</title>
-<meta name="description" content="Click how many of the target shapes you see — kid-friendly counting game." />
-<style>
-  :root{
-    --bg: #f0f9ff;
-    --accent: #8bc34a;
-    --card: rgba(255,255,255,0.95);
-    --shape-size: 60px;
-    --inner-size: 40px;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family: "Comic Sans MS", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-    background:var(--bg);
-    display:flex;
-    justify-content:center;
-    padding:20px;
-  }
+    crossorigin="anonymous"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Color & Shape Count — Count the Target</title>
+  <meta name="description" content="Click how many of the target shapes you see — kid-friendly counting game." />
+  <style>
+    :root {
+      --bg: #f0f9ff;
+      --accent: #8bc34a;
+      --card: rgba(255, 255, 255, 0.95);
+      --shape-size: 60px;
+      --inner-size: 40px;
+    }
 
-  .game {
-    width:100%;
-    max-width:980px;
-    background:linear-gradient(180deg,#ffffffcc,#ffffffaa);
-    border-radius:14px;
-    padding:16px;
-    box-shadow:0 10px 30px rgba(0,0,0,.12);
-    text-align:center;
-  }
+    * {
+      box-sizing: border-box
+    }
 
-  header h1{ margin:6px 0; color:#074f6b; }
-  .badges { display:flex; gap:12px; justify-content:center; margin:8px 0; }
-  .badge {
-    background:var(--card);
-    padding:8px 12px;
-    border-radius:999px;
-    font-weight:800;
-    box-shadow:0 6px 14px rgba(0,0,0,0.06);
-  }
+    body {
+      margin: 0;
+      font-family: "Comic Sans MS", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: var(--bg);
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
 
-  #targetBox{
-    display:inline-flex;
-    gap:10px;
-    align-items:center;
-    background:#e8f6ff;
-    padding:10px 14px;
-    border-radius:12px;
-    margin:8px 0 16px;
-    font-weight:700;
-    color:#074f6b;
-    box-shadow:0 4px 12px rgba(0,0,0,0.06);
-  }
+    .game {
+      width: 100%;
+      max-width: 980px;
+      background: linear-gradient(180deg, #ffffffcc, #ffffffaa);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
+      text-align: center;
+    }
 
-  /* grid for shapes */
-  #shapeGrid{
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(calc(var(--shape-size)), 1fr));
-    gap:10px;
-    justify-items:center;
-    align-items:center;
-    padding:12px;
-    max-height:320px;
-    overflow:auto;
-    margin-bottom:12px;
-  }
+    header h1 {
+      margin: 6px 0;
+      color: #074f6b;
+    }
 
-  .shape {
-    width: var(--shape-size);
-    height: var(--shape-size);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:12px;
-    background: #fff8;
-    box-shadow:0 4px 10px rgba(0,0,0,.08);
-  }
+    .badges {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin: 8px 0;
+    }
 
-  .shape-inner{
-    width: var(--inner-size);
-    height: var(--inner-size);
-    display:block;
-    transition: transform .12s ease, opacity .12s;
-  }
-  .shape-inner.circle{ border-radius:50%; }
-  .shape-inner.square{ border-radius:6px; }
-  .shape-inner.triangle{ background:transparent; width:0; height:0; border-left: calc(var(--inner-size) / 2) solid transparent; border-right: calc(var(--inner-size) / 2) solid transparent; border-bottom: var(--inner-size) solid red; }
+    .badge {
+      background: var(--card);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+    }
 
-  /* options (numbers) */
-  #options { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:8px; }
-  .num-btn{
-    appearance:none; border:4px solid transparent; background:var(--card); border-radius:12px;
-    width:72px; height:64px; font-size:1.6rem; font-weight:800; cursor:pointer;
-    display:flex; align-items:center; justify-content:center; user-select:none;
-    box-shadow:0 8px 18px rgba(0,0,0,.06); transition: transform .12s, border-color .12s;
-  }
-  .num-btn:active{ transform:scale(.97); }
-  .num-btn.correct{ border-color:#16a34a; box-shadow:0 10px 22px rgba(22,163,74,.12); }
-  .num-btn.wrong{ border-color:#ef4444; box-shadow:0 10px 22px rgba(239,68,68,.12); opacity:.85; }
+    #targetBox {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      background: #e8f6ff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      margin: 8px 0 16px;
+      font-weight: 700;
+      color: #074f6b;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
 
-  .controls{ margin-top:12px; display:flex; gap:10px; justify-content:center; }
-  .btn{ padding:10px 14px; border-radius:10px; border:0; font-weight:800; cursor:pointer; }
-  .btn.primary{ background:#074f6b; color:#fff; }
-  .btn.ghost{ background:#f59e0b; color:#111; }
+    /* grid for shapes */
+    #shapeGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(calc(var(--shape-size)), 1fr));
+      gap: 10px;
+      justify-items: center;
+      align-items: center;
+      padding: 12px;
+      max-height: 320px;
+      overflow: auto;
+      margin-bottom: 12px;
+    }
 
-  footer{ margin-top:12px; color:#666; font-size:.95rem; }
+    .shape {
+      width: var(--shape-size);
+      height: var(--shape-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: #fff8;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, .08);
+    }
 
-  /* responsive tweaks */
-  @media (max-width:520px){
-    :root{ --shape-size: 48px; --inner-size: 32px; }
-    .num-btn{ width:60px; height:56px; font-size:1.3rem; }
-  }
-</style>
+    .shape-inner {
+      width: var(--inner-size);
+      height: var(--inner-size);
+      display: block;
+      transition: transform .12s ease, opacity .12s;
+    }
+
+    .shape-inner.circle {
+      border-radius: 50%;
+    }
+
+    .shape-inner.square {
+      border-radius: 6px;
+    }
+
+    .shape-inner.triangle {
+      background: transparent;
+      width: 0;
+      height: 0;
+      border-left: calc(var(--inner-size) / 2) solid transparent;
+      border-right: calc(var(--inner-size) / 2) solid transparent;
+      border-bottom: var(--inner-size) solid red;
+    }
+
+    /* options (numbers) */
+    #options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .num-btn {
+      appearance: none;
+      border: 4px solid transparent;
+      background: var(--card);
+      border-radius: 12px;
+      width: 72px;
+      height: 64px;
+      font-size: 1.6rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, .06);
+      transition: transform .12s, border-color .12s;
+    }
+
+    .num-btn:active {
+      transform: scale(.97);
+    }
+
+    .num-btn.correct {
+      border-color: #16a34a;
+      box-shadow: 0 10px 22px rgba(22, 163, 74, .12);
+    }
+
+    .num-btn.wrong {
+      border-color: #ef4444;
+      box-shadow: 0 10px 22px rgba(239, 68, 68, .12);
+      opacity: .85;
+    }
+
+    .controls {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 0;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      background: #074f6b;
+      color: #fff;
+    }
+
+    .btn.ghost {
+      background: #f59e0b;
+      color: #111;
+    }
+
+    footer {
+      margin-top: 12px;
+      color: #666;
+      font-size: .95rem;
+    }
+
+    /* responsive tweaks */
+    @media (max-width:520px) {
+      :root {
+        --shape-size: 48px;
+        --inner-size: 32px;
+      }
+
+      .num-btn {
+        width: 60px;
+        height: 56px;
+        font-size: 1.3rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
   <div class="game" role="main" aria-label="Color match counting game">
     <header>
@@ -145,244 +237,245 @@
     <footer>Tap the number that tells how many target shapes you see. (Click <strong>Skip</strong> to move on.)</footer>
   </div>
 
-<script>
-/* ====== Config & state ====== */
-const COLORS = [
-  { hex: '#ef4444', name: 'red' },
-  { hex: '#3b82f6', name: 'blue' },
-  { hex: '#22c55e', name: 'green' },
-  { hex: '#f59e0b', name: 'orange' }
-];
+  <script>
+    /* ====== Config & state ====== */
+    const COLORS = [
+      { hex: '#ef4444', name: 'red' },
+      { hex: '#3b82f6', name: 'blue' },
+      { hex: '#22c55e', name: 'green' },
+      { hex: '#f59e0b', name: 'orange' }
+    ];
 
-const SHAPES = ['circle','square','triangle']; // supported shapes
+    const SHAPES = ['circle', 'square', 'triangle']; // supported shapes
 
-const TOTAL_LEVELS = 20; // changeable
-let currentLevel = 1;
-let score = 0;
+    const TOTAL_LEVELS = 20; // changeable
+    let currentLevel = 1;
+    let score = 0;
 
-/* DOM */
-const shapeGrid = document.getElementById('shapeGrid');
-const optionsDiv = document.getElementById('options');
-const levelBadge = document.getElementById('levelBadge');
-const scoreBadge = document.getElementById('scoreBadge');
-const targetEmojiSpan = document.getElementById('targetEmoji');
-const targetLabel = document.getElementById('targetLabel');
-const skipBtn = document.getElementById('skipBtn');
-const restartBtn = document.getElementById('restartBtn');
+    /* DOM */
+    const shapeGrid = document.getElementById('shapeGrid');
+    const optionsDiv = document.getElementById('options');
+    const levelBadge = document.getElementById('levelBadge');
+    const scoreBadge = document.getElementById('scoreBadge');
+    const targetEmojiSpan = document.getElementById('targetEmoji');
+    const targetLabel = document.getElementById('targetLabel');
+    const skipBtn = document.getElementById('skipBtn');
+    const restartBtn = document.getElementById('restartBtn');
 
-/* audio (optional) */
-const correctAudio = new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg'); // plays on correct
+    /* audio (optional) */
+    const correctAudio = new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg'); // plays on correct
 
-/* helpers */
-function shuffle(a){
-  for(let i=a.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
-  return a;
-}
-function randInt(min, max){ return Math.floor(Math.random()*(max-min+1)) + min; }
-function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
-
-/* scale shapes on many items */
-function setShapeSizes(numItems){
-  // adjust CSS variables based on number of items so UI doesn't break
-  const root = document.documentElement;
-  if(numItems <= 12){
-    root.style.setProperty('--shape-size', '60px');
-    root.style.setProperty('--inner-size', '40px');
-  } else if(numItems <= 20){
-    root.style.setProperty('--shape-size', '52px');
-    root.style.setProperty('--inner-size', '34px');
-  } else {
-    root.style.setProperty('--shape-size', '44px');
-    root.style.setProperty('--inner-size', '28px');
-  }
-}
-
-/* render one level */
-function startLevel(){
-  shapeGrid.innerHTML = '';
-  optionsDiv.innerHTML = '';
-
-  // determine how many shapes to show from level
-  let numShapes = 6;
-  if (currentLevel >= 6 && currentLevel <= 10) numShapes = 10;
-  if (currentLevel >= 11 && currentLevel <= 15) numShapes = 16;
-  if (currentLevel >= 16) numShapes = 22;
-
-  setShapeSizes(numShapes);
-
-  // how many different types appear this level
-  let maxTypes = 2;
-  if(currentLevel >= 11 && currentLevel <= 15) maxTypes = 3;
-  if(currentLevel >= 16) maxTypes = 4;
-  const typesCount = Math.min(maxTypes, COLORS.length, SHAPES.length);
-
-  // choose random palette & shapes for this level
-  const colors = shuffle(COLORS.slice()).slice(0, typesCount);
-  const shapes = shuffle(SHAPES.slice()).slice(0, typesCount);
-
-  // pick target (a pair of color+shape)
-  const targetIdx = randInt(0, Math.min(colors.length, shapes.length)-1);
-  const targetColor = colors[targetIdx % colors.length];
-  const targetShape = shapes[targetIdx % shapes.length];
-
-  // choose how many targets (at least 1, at most Math.min(numShapes-1, maxTargetsPerLevel))
-  const maxTargetAllowed = Math.min(numShapes - 1, Math.ceil(numShapes/2));
-  const targetCount = randInt(1, clamp(Math.ceil(numShapes/3), 1, maxTargetAllowed));
-
-  // build all items guaranteeing exactly targetCount occurrences of target
-  const items = [];
-  // add targets first
-  for(let i=0;i<targetCount;i++){
-    items.push({ color: targetColor.hex, shape: targetShape, isTarget:true });
-  }
-  // fill rest with random non-target items
-  while(items.length < numShapes){
-    // pick random color & shape
-    const c = colors[randInt(0, colors.length-1)];
-    const s = shapes[randInt(0, shapes.length-1)];
-    // ensure not both target (so target count remains exact)
-    if(c.hex === targetColor.hex && s === targetShape) continue;
-    items.push({ color: c.hex, shape: s, isTarget:false });
-  }
-
-  shuffle(items);
-
-  // render items
-  items.forEach(item=>{
-    const wrapper = document.createElement('div');
-    wrapper.className = 'shape';
-    wrapper.setAttribute('role','img');
-    // inner element
-    const inner = document.createElement('span');
-    inner.className = 'shape-inner ' + item.shape;
-    // style by color and shape
-    if(item.shape === 'triangle'){
-      // triangle uses border-bottom color
-      inner.style.borderBottomColor = item.color;
-    } else {
-      inner.style.background = item.color;
-    }
-    wrapper.appendChild(inner);
-    shapeGrid.appendChild(wrapper);
-  });
-
-  // show target text — include a small emoji for clarity
-  const emoji = pickEmojiForShape(targetShape);
-  targetEmojiSpan.textContent = emoji;
-  targetLabel.textContent = `${targetColor.name} ${targetShape}${targetShape.endsWith('s') ? '' : 's'}`;
-
-  // create numeric options (correct + 3 distractors)
-  const opts = new Set();
-  opts.add(targetCount);
-  // distractors within +/-3 and within [0, numShapes]
-  while(opts.size < 4){
-    let n = targetCount + randInt(-3,3);
-    n = clamp(n, 0, numShapes);
-    opts.add(n);
-  }
-  const optsArr = shuffle(Array.from(opts));
-  optsArr.forEach(n=>{
-    const b = document.createElement('button');
-    b.className = 'num-btn';
-    b.type = 'button';
-    b.textContent = n;
-    b.setAttribute('aria-label', `choose ${n}`);
-    b.addEventListener('click', ()=> handleOptionClick(b, n, targetCount));
-    optionsDiv.appendChild(b);
-  });
-
-  // update badges
-  levelBadge.textContent = `Level ${currentLevel} / ${TOTAL_LEVELS}`;
-  scoreBadge.textContent = `Score: ${score}`;
-}
-
-/* map shape -> emoji for target display */
-function pickEmojiForShape(shape){
-  // friendly little mapping
-  if(shape === 'circle') return '⚪';
-  if(shape === 'square') return '⬛';
-  if(shape === 'triangle') return '🔺';
-  return '🔸';
-}
-
-/* clicking a numeric option */
-function handleOptionClick(button, chosen, correct){
-  // disable buttons
-  const all = optionsDiv.querySelectorAll('.num-btn');
-  all.forEach(b => b.disabled = true);
-
-  if(chosen === correct){
-    button.classList.add('correct');
-    score++;
-    scoreBadge.textContent = `Score: ${score}`;
-    try{ correctAudio.currentTime = 0; correctAudio.play(); } catch(e){}
-    confetti();
-    setTimeout(()=> {
-      currentLevel++;
-      if(currentLevel > TOTAL_LEVELS){
-        showComplete();
-      } else {
-        startLevel();
+    /* helpers */
+    function shuffle(a) {
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
       }
-    }, 700);
-  } else {
-    button.classList.add('wrong');
-    // allow re-try after a short time
-    setTimeout(()=> {
-      all.forEach(b => b.disabled = false);
-      button.classList.remove('wrong');
-    }, 500);
-  }
-}
+      return a;
+    }
+    function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
-function showComplete(){
-  shapeGrid.innerHTML = '';
-  optionsDiv.innerHTML = '';
-  levelBadge.textContent = `Completed`;
-  alert(`Great job! You finished the game.\nScore: ${score} / ${TOTAL_LEVELS}`);
-  // reset
-  currentLevel = 1;
-  score = 0;
-  startLevel();
-}
+    /* scale shapes on many items */
+    function setShapeSizes(numItems) {
+      // adjust CSS variables based on number of items so UI doesn't break
+      const root = document.documentElement;
+      if (numItems <= 12) {
+        root.style.setProperty('--shape-size', '60px');
+        root.style.setProperty('--inner-size', '40px');
+      } else if (numItems <= 20) {
+        root.style.setProperty('--shape-size', '52px');
+        root.style.setProperty('--inner-size', '34px');
+      } else {
+        root.style.setProperty('--shape-size', '44px');
+        root.style.setProperty('--inner-size', '28px');
+      }
+    }
 
-/* skip and restart */
-skipBtn.addEventListener('click', ()=> {
-  currentLevel++;
-  if(currentLevel > TOTAL_LEVELS) showComplete();
-  else startLevel();
-});
-restartBtn.addEventListener('click', ()=> {
-  currentLevel = 1; score = 0; startLevel();
-});
+    /* render one level */
+    function startLevel() {
+      shapeGrid.innerHTML = '';
+      optionsDiv.innerHTML = '';
 
-/* small confetti (visual) */
-function confetti(){
-  for(let i=0;i<18;i++){
-    const c = document.createElement('div');
-    c.style.position = 'fixed';
-    c.style.left = (20 + Math.random()*60) + 'vw';
-    c.style.top = '-10px';
-    c.style.width = c.style.height = (6 + Math.random()*8) + 'px';
-    c.style.background = `hsl(${Math.random()*360} 80% 60%)`;
-    c.style.borderRadius = '50%';
-    c.style.pointerEvents = 'none';
-    c.style.zIndex = 9999;
-    document.body.appendChild(c);
-    const dur = 1200 + Math.random()*800;
-    c.animate([
-      { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-      { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random()*720}deg)`, opacity: 0.6 }
-    ], { duration: dur, easing: 'cubic-bezier(.2,.8,.2,1)'});
-    setTimeout(()=> c.remove(), dur + 50);
-  }
-}
+      // determine how many shapes to show from level
+      let numShapes = 6;
+      if (currentLevel >= 6 && currentLevel <= 10) numShapes = 10;
+      if (currentLevel >= 11 && currentLevel <= 15) numShapes = 16;
+      if (currentLevel >= 16) numShapes = 22;
 
-/* start */
-startLevel();
-</script>
+      setShapeSizes(numShapes);
+
+      // how many different types appear this level
+      let maxTypes = 2;
+      if (currentLevel >= 11 && currentLevel <= 15) maxTypes = 3;
+      if (currentLevel >= 16) maxTypes = 4;
+      const typesCount = Math.min(maxTypes, COLORS.length, SHAPES.length);
+
+      // choose random palette & shapes for this level
+      const colors = shuffle(COLORS.slice()).slice(0, typesCount);
+      const shapes = shuffle(SHAPES.slice()).slice(0, typesCount);
+
+      // pick target (a pair of color+shape)
+      const targetIdx = randInt(0, Math.min(colors.length, shapes.length) - 1);
+      const targetColor = colors[targetIdx % colors.length];
+      const targetShape = shapes[targetIdx % shapes.length];
+
+      // choose how many targets (at least 1, at most Math.min(numShapes-1, maxTargetsPerLevel))
+      const maxTargetAllowed = Math.min(numShapes - 1, Math.ceil(numShapes / 2));
+      const targetCount = randInt(1, clamp(Math.ceil(numShapes / 3), 1, maxTargetAllowed));
+
+      // build all items guaranteeing exactly targetCount occurrences of target
+      const items = [];
+      // add targets first
+      for (let i = 0; i < targetCount; i++) {
+        items.push({ color: targetColor.hex, shape: targetShape, isTarget: true });
+      }
+      // fill rest with random non-target items
+      while (items.length < numShapes) {
+        // pick random color & shape
+        const c = colors[randInt(0, colors.length - 1)];
+        const s = shapes[randInt(0, shapes.length - 1)];
+        // ensure not both target (so target count remains exact)
+        if (c.hex === targetColor.hex && s === targetShape) continue;
+        items.push({ color: c.hex, shape: s, isTarget: false });
+      }
+
+      shuffle(items);
+
+      // render items
+      items.forEach(item => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'shape';
+        wrapper.setAttribute('role', 'img');
+        // inner element
+        const inner = document.createElement('span');
+        inner.className = 'shape-inner ' + item.shape;
+        // style by color and shape
+        if (item.shape === 'triangle') {
+          // triangle uses border-bottom color
+          inner.style.borderBottomColor = item.color;
+        } else {
+          inner.style.background = item.color;
+        }
+        wrapper.appendChild(inner);
+        shapeGrid.appendChild(wrapper);
+      });
+
+      // show target text — include a small emoji for clarity
+      const emoji = pickEmojiForShape(targetShape);
+      targetEmojiSpan.textContent = emoji;
+      targetLabel.textContent = `${targetColor.name} ${targetShape}${targetShape.endsWith('s') ? '' : 's'}`;
+
+      // create numeric options (correct + 3 distractors)
+      const opts = new Set();
+      opts.add(targetCount);
+      // distractors within +/-3 and within [0, numShapes]
+      while (opts.size < 4) {
+        let n = targetCount + randInt(-3, 3);
+        n = clamp(n, 0, numShapes);
+        opts.add(n);
+      }
+      const optsArr = shuffle(Array.from(opts));
+      optsArr.forEach(n => {
+        const b = document.createElement('button');
+        b.className = 'num-btn';
+        b.type = 'button';
+        b.textContent = n;
+        b.setAttribute('aria-label', `choose ${n}`);
+        b.addEventListener('click', () => handleOptionClick(b, n, targetCount));
+        optionsDiv.appendChild(b);
+      });
+
+      // update badges
+      levelBadge.textContent = `Level ${currentLevel} / ${TOTAL_LEVELS}`;
+      scoreBadge.textContent = `Score: ${score}`;
+    }
+
+    /* map shape -> emoji for target display */
+    function pickEmojiForShape(shape) {
+      // friendly little mapping
+      if (shape === 'circle') return '⚪';
+      if (shape === 'square') return '⬛';
+      if (shape === 'triangle') return '🔺';
+      return '🔸';
+    }
+
+    /* clicking a numeric option */
+    function handleOptionClick(button, chosen, correct) {
+      // disable buttons
+      const all = optionsDiv.querySelectorAll('.num-btn');
+      all.forEach(b => b.disabled = true);
+
+      if (chosen === correct) {
+        button.classList.add('correct');
+        score++;
+        scoreBadge.textContent = `Score: ${score}`;
+        try { correctAudio.currentTime = 0; correctAudio.play(); } catch (e) { }
+        confetti();
+        setTimeout(() => {
+          currentLevel++;
+          if (currentLevel > TOTAL_LEVELS) {
+            showComplete();
+          } else {
+            startLevel();
+          }
+        }, 700);
+      } else {
+        button.classList.add('wrong');
+        // allow re-try after a short time
+        setTimeout(() => {
+          all.forEach(b => b.disabled = false);
+          button.classList.remove('wrong');
+        }, 500);
+      }
+    }
+
+    function showComplete() {
+      shapeGrid.innerHTML = '';
+      optionsDiv.innerHTML = '';
+      levelBadge.textContent = `Completed`;
+      alert(`Great job! You finished the game.\nScore: ${score} / ${TOTAL_LEVELS}`);
+      // reset
+      currentLevel = 1;
+      score = 0;
+      startLevel();
+    }
+
+    /* skip and restart */
+    skipBtn.addEventListener('click', () => {
+      currentLevel++;
+      if (currentLevel > TOTAL_LEVELS) showComplete();
+      else startLevel();
+    });
+    restartBtn.addEventListener('click', () => {
+      currentLevel = 1; score = 0; startLevel();
+    });
+
+    /* small confetti (visual) */
+    function confetti() {
+      for (let i = 0; i < 18; i++) {
+        const c = document.createElement('div');
+        c.style.position = 'fixed';
+        c.style.left = (20 + Math.random() * 60) + 'vw';
+        c.style.top = '-10px';
+        c.style.width = c.style.height = (6 + Math.random() * 8) + 'px';
+        c.style.background = `hsl(${Math.random() * 360} 80% 60%)`;
+        c.style.borderRadius = '50%';
+        c.style.pointerEvents = 'none';
+        c.style.zIndex = 9999;
+        document.body.appendChild(c);
+        const dur = 1200 + Math.random() * 800;
+        c.animate([
+          { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+          { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 720}deg)`, opacity: 0.6 }
+        ], { duration: dur, easing: 'cubic-bezier(.2,.8,.2,1)' });
+        setTimeout(() => c.remove(), dur + 50);
+      }
+    }
+
+    /* start */
+    startLevel();
+  </script>
 </body>
+
 </html>

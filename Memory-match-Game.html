@@ -1,24 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6306028737571143"
-     crossorigin="anonymous"></script>
-  <!-- Basic SEO -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6306028737571143" crossorigin="anonymous"></script>
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Play the Memory Match Game – a fun brain-training puzzle with animals, emojis, and multiple levels! Mobile-friendly and free to play.">
   <meta name="keywords" content="Memory Match Game, Brain Game, Emoji Match, Puzzle Game, Kids Game, Matching Game">
   <meta name="author" content="OnCharcha Games">
   <meta name="robots" content="index, follow">
-
-  <!-- Open Graph for Social Sharing -->
   <meta property="og:title" content="🎮 Memory Match Game – Fun Puzzle!">
   <meta property="og:description" content="Challenge your brain with this colorful memory match puzzle. Multiple levels, fun emojis, and mobile-friendly gameplay.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://yourdomain.com/thumbnail.jpg"> <!-- Replace with actual image -->
-  <meta property="og:url" content="https://yourdomain.com/memory-match">
+  <meta property="og:image" content="https://play-zone.games/thumbnail.jpg">
+  <meta property="og:url" content="https://play-zone.games/memory-match">
 
-  <!-- Title -->
   <title>🎮 Memory Match Game – Fun Brain Puzzle</title>
 
   <style>
@@ -74,6 +70,7 @@
       perspective: 800px;
       max-width: 600px;
       width: 95vw;
+      justify-content: center;
     }
 
     .card {
@@ -106,10 +103,6 @@
     .card .front {
       color: #fff;
       font-weight: bold;
-    }
-
-    .card.flipped .front {
-      background: #fff;
     }
 
     .card .back {
@@ -145,6 +138,27 @@
 
     button:hover { transform: scale(1.05); }
 
+    /* Instruction animation */
+    #instruction {
+      position: fixed;
+      top: 80px;
+      width: 100%;
+      text-align: center;
+      font-size: 1.2em;
+      color: #fff;
+      text-shadow: 2px 2px 6px #000;
+      z-index: 1000;
+      opacity: 0;
+      animation: showInstruction 6s ease-in-out;
+      font-weight: bold;
+    }
+
+    @keyframes showInstruction {
+      0% { opacity: 0; transform: translateY(-10px); }
+      10%, 80% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-10px); }
+    }
+
     /* Mobile responsiveness */
     @media (max-width: 768px){
       .card { width: 70px; height: 70px; font-size:28px; }
@@ -160,9 +174,12 @@
     }
   </style>
 </head>
-<body>
 
+<body>
   <h1>🎮 Memory Match Game 🎮</h1>
+
+  <div id="instruction">🧠 Match the same emojis to clear the board! Tap cards to flip 💫</div>
+
   <div class="stats">
     <div>Moves: <span id="moves">0</span></div>
     <div>Level: <span id="level">1</span></div>
@@ -174,6 +191,11 @@
 
   <div class="message" id="message"></div>
   <button id="nextLevelBtn" style="display:none;">Next Level</button>
+
+  <!-- Audio -->
+  <audio id="flipSound" src="/collect-points-190037.mp3"></audio>
+  <audio id="matchSound" src="/game-bonus-144751.mp3"></audio>
+  <audio id="winSound" src="/level-complete-394515.mp3"></audio>
 
   <script>
     let level = 1;
@@ -188,9 +210,13 @@
     const levelSpan = document.getElementById('level');
     const message = document.getElementById('message');
     const nextLevelBtn = document.getElementById('nextLevelBtn');
+    const instruction = document.getElementById('instruction');
+
+    const flipSound = document.getElementById('flipSound');
+    const matchSound = document.getElementById('matchSound');
+    const winSound = document.getElementById('winSound');
 
     const symbols = ["🐶","🐱","🦁","🐼","🐸","🐵","🐔","🦊","🐰","🐷","🐨","🐯","🐧","🐢","🐙","🦄"];
-
     const gradients = [
       "linear-gradient(135deg,#ff6b6b,#ff9f43)",
       "linear-gradient(135deg,#1dd1a1,#00d2d3)",
@@ -218,7 +244,7 @@
       message.textContent = '';
       nextLevelBtn.style.display = 'none';
 
-      const columns = Math.min(cardsArr.length/2, 4);
+      const columns = Math.ceil(Math.sqrt(cardsArr.length));
       game.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
 
       cardsArr.forEach(symbol=>{
@@ -232,10 +258,16 @@
         card.addEventListener('click',()=>flipCard(card));
         game.appendChild(card);
       });
+
+      // Re-trigger instruction animation
+      instruction.style.animation = 'none';
+      void instruction.offsetWidth;
+      instruction.style.animation = 'showInstruction 6s ease-in-out';
     }
 
     function flipCard(card){
       if(lockBoard || card.classList.contains('flipped')) return;
+      flipSound.currentTime = 0; flipSound.play();
       card.classList.add('flipped');
       if(!firstCard) { firstCard = card; return; }
       secondCard = card;
@@ -246,9 +278,11 @@
       moves++;
       movesSpan.textContent = moves;
       if(firstCard.dataset.symbol === secondCard.dataset.symbol){
+        matchSound.currentTime = 0; matchSound.play();
         matchedPairs++;
         resetTurn();
         if(matchedPairs === Math.min(level+2,8)){
+          winSound.currentTime = 0; winSound.play();
           message.textContent = "🎉 Level Completed!";
           nextLevelBtn.style.display = 'inline-block';
         }
@@ -258,7 +292,7 @@
           firstCard.classList.remove('flipped');
           secondCard.classList.remove('flipped');
           resetTurn();
-        },400);
+        },600);
       }
     }
 

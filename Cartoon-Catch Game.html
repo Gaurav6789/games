@@ -37,12 +37,35 @@
       width: 100%;
       text-align: center;
       z-index: 1000;
+      background: radial-gradient(rgb(43, 95, 226), transparent) !important;
     }
     #score, #level {
       font-size: 2em;
       color: #fff;
       text-shadow: 2px 2px 6px #000;
       margin: 4px;
+    }
+
+    /* 🩵 Cute Instruction */
+    #instruction {
+      position: fixed;
+      top: 100px;
+      width: 100%;
+      text-align: center;
+      font-size: 1.3em;
+      color: #fff;
+      text-shadow: 2px 2px 6px #000;
+      z-index: 1000;
+      opacity: 0;
+      animation: showInstruction 6s ease-in-out;
+      background: radial-gradient(rgb(23, 62, 178), transparent) !important;
+      font-weight: bold;
+    }
+
+    @keyframes showInstruction {
+      0% { opacity: 0; transform: translateY(-10px); }
+      10%, 80% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-10px); }
     }
 
     .cartoon {
@@ -107,6 +130,9 @@
     <div id="level">Level: 1</div>
   </div>
 
+  <!-- 🌟 Cute Game Instruction -->
+  <div id="instruction">✨ Catch the cute emojis to earn points! But avoid the 💣 bombs! 💥</div>
+
   <!-- Bomb Overlay -->
   <div id="bombOverlay">
     💥 Game Over! <br/>
@@ -118,12 +144,11 @@
   <audio id="cheer" >
     <source src="collect-points-190037.mp3" type="audio/mpeg">
   </audio>
-
+  
   <script>
     const cheer = document.getElementById("cheer");
-    cheer.volume = 1;
 
-    const characters = ['🐱','🐭','🐶','🐹','🐰','🦊','🐼'];
+    const characters = ['🐱','🐭','🐶','🐹','🐰','🦊','🐼','🐒','🦋','🐥', '🐯','🍎', '🍊', '🎾','🏏', '⚽️', '🚗', '🚌', '📱'];
     const bonusEmoji = '🎣';
     const dangerEmoji = '💣';
     let score = 0;
@@ -205,10 +230,16 @@
       bombOverlay.style.display = 'none';
       score = 0;
       level = 1;
-      interval = 1000;
+      interval = 1500;
       scoreEl.textContent = 'Score: 0';
       levelEl.textContent = 'Level: 1';
       spawnInterval = setInterval(spawnCharacter, interval);
+
+      // 👇 Show the cute instruction again
+      const instr = document.getElementById('instruction');
+      instr.style.animation = 'none';
+      void instr.offsetWidth; // reset animation
+      instr.style.animation = 'showInstruction 6s ease-in-out';
     }
 
     let spawnInterval = setInterval(spawnCharacter, interval);

@@ -1,170 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6306028737571143"
-     crossorigin="anonymous"></script>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Number Learning Game: Random 1–100</title>
-<style>
-:root{
-  --bg:#f0f9ff; --accent:#8bc34a; --muted:#666; --card:rgba(255,255,255,0.95); --radius:12px;
-}
-*{box-sizing:border-box;}
-html,body{height:100%; margin:0; font-family:"Comic Sans MS",system-ui,-apple-system,"Segoe UI",Roboto,Arial; display:flex; align-items:center; justify-content:center; padding:16px; -webkit-tap-highlight-color:transparent;}
-.container{width:100%; max-width:980px; background: linear-gradient(180deg,#ffffffcc,#ffffffaa); border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.12); padding:18px; display:flex; flex-direction:column; align-items:center; gap:12px;}
-header{display:flex; flex-direction:column; align-items:center; gap:8px; width:100%;}
-#level{font-size:clamp(1.1rem,2.2vw,1.5rem); color:#222; font-weight:800; margin:0;}
-#message{font-size:clamp(1.4rem,3.5vw,2.5rem); color:#111; margin:0; text-shadow:0 1px 0 #fff;}
-main{width:100%; display:flex; flex-direction:column; align-items:center; gap:14px;}
-#options{width:100%; display:grid; grid-template-columns:repeat(auto-fit, minmax(84px,1fr)); gap:12px; justify-items:center; align-items:center; padding:8px;}
-.emoji-btn{-webkit-appearance:none; appearance:none; border:4px solid transparent; background: var(--card); border-radius:14px; width:100%; height:100%; min-height:84px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease; box-shadow:0 8px 18px rgba(0,0,0,0.08); font-size: clamp(2.6rem, 8vw, 6rem); padding:8px; user-select:none;}
-.emoji-btn:active{transform:scale(.96);}
-.emoji-btn:hover{border-color: color-mix(in srgb, var(--accent) 30%, transparent);}
-.emoji-btn[aria-pressed="true"]{border-color:#16a34a; box-shadow:0 10px 24px rgba(22,163,74,0.10);}
-.status{display:flex; gap:8px; align-items:center; justify-content:center; width:100%;}
-.badge{background: var(--card); padding:8px 12px; border-radius:999px; font-weight:800; box-shadow:0 6px 14px rgba(0,0,0,0.06);}
-.controls{display:flex; gap:10px; justify-content:center; width:100%; margin-top:4px;}
-.btn{padding:8px 12px; font-weight:800; border-radius:10px; border:0; cursor:pointer; background:#111827; color:#fff; box-shadow:0 8px 18px rgba(0,0,0,0.08); font-size: clamp(.9rem,2vw,1.1rem);}
-.btn.secondary{background:#f59e0b; color:#111827;}
-.emoji-btn:focus, .btn:focus{outline:3px solid rgba(59,130,246,0.18); outline-offset:4px;}
-footer{font-size:.9rem; color:var(--muted); margin-top:4px;}
-@media(max-width:480px){.container{padding:12px; border-radius:12px;} #options{gap:8px; grid-template-columns:repeat(auto-fit, minmax(64px,1fr));} .emoji-btn{min-height:72px; font-size:clamp(2.2rem,12vw,5.5rem);}}
-.confetti{position:absolute; width:10px; height:10px; border-radius:50%; pointer-events:none;}
-</style>
+    crossorigin="anonymous"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Number Learning Game: Random 1–100</title>
+  <style>
+    :root {
+      --bg: #f0f9ff;
+      --accent: #8bc34a;
+      --muted: #666;
+      --card: rgba(255, 255, 255, 0.95);
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: "Comic Sans MS", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 980px;
+      background: linear-gradient(180deg, #ffffffcc, #ffffffaa);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    #level {
+      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+      color: #222;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    #message {
+      font-size: clamp(1.4rem, 3.5vw, 2.5rem);
+      color: #111;
+      margin: 0;
+      text-shadow: 0 1px 0 #fff;
+    }
+
+    main {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    #options {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+      gap: 12px;
+      justify-items: center;
+      align-items: center;
+      padding: 8px;
+    }
+
+    .emoji-btn {
+      -webkit-appearance: none;
+      appearance: none;
+      border: 4px solid transparent;
+      background: var(--card);
+      border-radius: 14px;
+      width: 100%;
+      height: 100%;
+      min-height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+      font-size: clamp(2.6rem, 8vw, 6rem);
+      padding: 8px;
+      user-select: none;
+    }
+
+    .emoji-btn:active {
+      transform: scale(.96);
+    }
+
+    .emoji-btn:hover {
+      border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+    }
+
+    .emoji-btn[aria-pressed="true"] {
+      border-color: #16a34a;
+      box-shadow: 0 10px 24px rgba(22, 163, 74, 0.10);
+    }
+
+    .status {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .badge {
+      background: var(--card);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .btn {
+      padding: 8px 12px;
+      font-weight: 800;
+      border-radius: 10px;
+      border: 0;
+      cursor: pointer;
+      background: #111827;
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+      font-size: clamp(.9rem, 2vw, 1.1rem);
+    }
+
+    .btn.secondary {
+      background: #f59e0b;
+      color: #111827;
+    }
+
+    .emoji-btn:focus,
+    .btn:focus {
+      outline: 3px solid rgba(59, 130, 246, 0.18);
+      outline-offset: 4px;
+    }
+
+    footer {
+      font-size: .9rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    @media(max-width:480px) {
+      .container {
+        padding: 12px;
+        border-radius: 12px;
+      }
+
+      #options {
+        gap: 8px;
+        grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+      }
+
+      .emoji-btn {
+        min-height: 72px;
+        font-size: clamp(2.2rem, 12vw, 5.5rem);
+      }
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+  </style>
 </head>
+
 <body>
-<div class="container" role="main" aria-label="Number learning game">
-<header>
-  <div id="level" aria-live="polite">Level 1 – Number Game</div>
-  <div id="message" aria-live="polite">Click number 1!</div>
-</header>
-<main>
-  <section id="options" aria-label="number choices"></section>
-  <div class="status" aria-hidden="false">
-    <div class="badge" id="progress">1 / 100</div>
-    <div class="badge" id="score">Score: 0</div>
-  </div>
-  <div class="controls">
-    <button class="btn" id="prevBtn">◀ Prev</button>
-    <button class="btn secondary" id="restartBtn">Restart</button>
-    <button class="btn" id="nextBtn">Next ▶</button>
-  </div>
-</main>
-<footer>Tip: Use keyboard — Tab to highlight, Enter/Space to choose. Mobile & screen-reader friendly.</footer>
-<audio id="cheer">
-<source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" type="audio/ogg">
-<source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.mp3" type="audio/mpeg">
-</audio>
+  <div class="container" role="main" aria-label="Number learning game">
+    <header>
+      <div id="level" aria-live="polite">Level 1 – Number Game</div>
+      <div id="message" aria-live="polite">Click number 1!</div>
+    </header>
+    <main>
+      <section id="options" aria-label="number choices"></section>
+      <div class="status" aria-hidden="false">
+        <div class="badge" id="progress">1 / 100</div>
+        <div class="badge" id="score">Score: 0</div>
+      </div>
+      <div class="controls">
+        <button class="btn" id="prevBtn">◀ Prev</button>
+        <button class="btn secondary" id="restartBtn">Restart</button>
+        <button class="btn" id="nextBtn">Next ▶</button>
+      </div>
+    </main>
+    <footer>Tip: Use keyboard — Tab to highlight, Enter/Space to choose. Mobile & screen-reader friendly.</footer>
+    <audio id="cheer">
+      <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" type="audio/ogg">
+      <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.mp3" type="audio/mpeg">
+    </audio>
 
-<script>
-const cheer = document.getElementById('cheer');
-const optionsEl = document.getElementById('options');
-const levelEl = document.getElementById('level');
-const messageEl = document.getElementById('message');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const restartBtn = document.getElementById('restartBtn');
-const progressEl = document.getElementById('progress');
-const scoreEl = document.getElementById('score');
+    <script>
+      const cheer = document.getElementById('cheer');
+      const optionsEl = document.getElementById('options');
+      const levelEl = document.getElementById('level');
+      const messageEl = document.getElementById('message');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const restartBtn = document.getElementById('restartBtn');
+      const progressEl = document.getElementById('progress');
+      const scoreEl = document.getElementById('score');
 
-let numbers = [];
-let currentIndex = 0;
-let score = 0;
+      let numbers = [];
+      let currentIndex = 0;
+      let score = 0;
 
-// create random sequence 1–100
-for(let i=1;i<=100;i++) numbers.push(i);
-function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
-shuffle(numbers);
+      // create random sequence 1–100
+      for (let i = 1; i <= 100; i++) numbers.push(i);
+      function shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[arr[i], arr[j]] = [arr[j], arr[i]]; } }
+      shuffle(numbers);
 
-function renderLevel(){
-  const num = numbers[currentIndex];
-  levelEl.textContent = `Level ${currentIndex+1} – Number Game`;
-  messageEl.textContent = `Click number ${num}!`;
-  progressEl.textContent = `${currentIndex+1} / ${numbers.length}`;
-  
-  optionsEl.innerHTML='';
-  
-  // create 4 random choices including correct number
-  let opts = [num];
-  while(opts.length<4){
-    let r=Math.floor(Math.random()*100)+1;
-    if(!opts.includes(r)) opts.push(r);
-  }
-  shuffle(opts);
-  
-  opts.forEach(n=>{
-    const btn=document.createElement('button');
-    btn.type='button';
-    btn.className='emoji-btn';
-    btn.textContent=n;
-    btn.setAttribute('aria-label', `Number ${n}`);
-    btn.setAttribute('tabindex','0');
-    btn.addEventListener('click', ()=> onChoice(n, btn, num));
-    btn.addEventListener('keydown', (ev)=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault(); btn.click();}});
-    optionsEl.appendChild(btn);
-  });
-  
-  scoreEl.textContent=`Score: ${score}`;
-  changeBackground(currentIndex);
-}
+      function renderLevel() {
+        const num = numbers[currentIndex];
+        levelEl.textContent = `Level ${currentIndex + 1} – Number Game`;
+        messageEl.textContent = `Click number ${num}!`;
+        progressEl.textContent = `${currentIndex + 1} / ${numbers.length}`;
 
-function onChoice(selected, btn, correct){
-  const allBtns = optionsEl.querySelectorAll('.emoji-btn');
-  allBtns.forEach(b=>b.disabled=true);
-  if(selected===correct){
-    btn.setAttribute('aria-pressed','true'); btn.classList.add('correct'); score++; scoreEl.textContent=`Score: ${score}`;
-    try{cheer.currentTime=0;cheer.play();}catch(e){}
-    confettiBurst();
-    setTimeout(()=>{
-      currentIndex++;
-      if(currentIndex>=numbers.length){ showComplete(); return; }
+        optionsEl.innerHTML = '';
+
+        // create 4 random choices including correct number
+        let opts = [num];
+        while (opts.length < 4) {
+          let r = Math.floor(Math.random() * 100) + 1;
+          if (!opts.includes(r)) opts.push(r);
+        }
+        shuffle(opts);
+
+        opts.forEach(n => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'emoji-btn';
+          btn.textContent = n;
+          btn.setAttribute('aria-label', `Number ${n}`);
+          btn.setAttribute('tabindex', '0');
+          btn.addEventListener('click', () => onChoice(n, btn, num));
+          btn.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); btn.click(); } });
+          optionsEl.appendChild(btn);
+        });
+
+        scoreEl.textContent = `Score: ${score}`;
+        changeBackground(currentIndex);
+      }
+
+      function onChoice(selected, btn, correct) {
+        const allBtns = optionsEl.querySelectorAll('.emoji-btn');
+        allBtns.forEach(b => b.disabled = true);
+        if (selected === correct) {
+          btn.setAttribute('aria-pressed', 'true'); btn.classList.add('correct'); score++; scoreEl.textContent = `Score: ${score}`;
+          try { cheer.currentTime = 0; cheer.play(); } catch (e) { }
+          confettiBurst();
+          setTimeout(() => {
+            currentIndex++;
+            if (currentIndex >= numbers.length) { showComplete(); return; }
+            renderLevel();
+            const b2 = optionsEl.querySelectorAll('.emoji-btn'); b2.forEach(b => b.disabled = false);
+          }, 900);
+        } else {
+          btn.classList.add('wrong');
+          setTimeout(() => {
+            const b2 = optionsEl.querySelectorAll('.emoji-btn'); b2.forEach(b => b.disabled = false);
+            messageEl.textContent = `Oops — find number ${correct}!`;
+            setTimeout(() => messageEl.textContent = `Click number ${correct}!`, 1200);
+          }, 300);
+        }
+      }
+
+      function changeBackground(idx) {
+        const gradients = [
+          "linear-gradient(90deg,#f0f9ff 0%,#e8f6ff 100%)",
+          "linear-gradient(90deg,#fff1f0 0%,#fff7ed 100%)",
+          "linear-gradient(90deg,#f7fff0 0%,#e8fff7 100%)",
+          "linear-gradient(90deg,#f5f0ff 0%,#fff0f6 100%)"
+        ];
+        document.body.style.background = gradients[idx % gradients.length];
+      }
+
+      function confettiBurst() {
+        for (let i = 0; i < 20; i++) {
+          const c = document.createElement('div');
+          c.className = 'confetti';
+          c.style.left = (Math.random() * 100) + 'vw';
+          c.style.background = `hsl(${Math.random() * 360},90%,55%)`;
+          document.body.appendChild(c);
+          setTimeout(() => c.remove(), 1800 + Math.random() * 600);
+        }
+      }
+
+      function showComplete() {
+        levelEl.textContent = 'Well Done!';
+        messageEl.textContent = `You completed all numbers — Score: ${score}`;
+        optionsEl.innerHTML = '';
+      }
+
+      prevBtn.addEventListener('click', () => { currentIndex = Math.max(0, currentIndex - 1); renderLevel(); });
+      nextBtn.addEventListener('click', () => { currentIndex = Math.min(numbers.length - 1, currentIndex + 1); renderLevel(); });
+      restartBtn.addEventListener('click', () => { shuffle(numbers); currentIndex = 0; score = 0; renderLevel(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') prevBtn.click(); if (e.key === 'ArrowRight') nextBtn.click(); });
+
       renderLevel();
-      const b2=optionsEl.querySelectorAll('.emoji-btn'); b2.forEach(b=>b.disabled=false);
-    },900);
-  } else {
-    btn.classList.add('wrong');
-    setTimeout(()=>{
-      const b2=optionsEl.querySelectorAll('.emoji-btn'); b2.forEach(b=>b.disabled=false);
-      messageEl.textContent=`Oops — find number ${correct}!`;
-      setTimeout(()=>messageEl.textContent=`Click number ${correct}!`,1200);
-    },300);
-  }
-}
-
-function changeBackground(idx){
-  const gradients=[
-    "linear-gradient(90deg,#f0f9ff 0%,#e8f6ff 100%)",
-    "linear-gradient(90deg,#fff1f0 0%,#fff7ed 100%)",
-    "linear-gradient(90deg,#f7fff0 0%,#e8fff7 100%)",
-    "linear-gradient(90deg,#f5f0ff 0%,#fff0f6 100%)"
-  ];
-  document.body.style.background=gradients[idx%gradients.length];
-}
-
-function confettiBurst(){
-  for(let i=0;i<20;i++){
-    const c=document.createElement('div');
-    c.className='confetti';
-    c.style.left=(Math.random()*100)+'vw';
-    c.style.background=`hsl(${Math.random()*360},90%,55%)`;
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),1800+Math.random()*600);
-  }
-}
-
-function showComplete(){
-  levelEl.textContent='Well Done!';
-  messageEl.textContent=`You completed all numbers — Score: ${score}`;
-  optionsEl.innerHTML='';
-}
-
-prevBtn.addEventListener('click',()=>{currentIndex=Math.max(0,currentIndex-1); renderLevel();});
-nextBtn.addEventListener('click',()=>{currentIndex=Math.min(numbers.length-1,currentIndex+1); renderLevel();});
-restartBtn.addEventListener('click',()=>{shuffle(numbers); currentIndex=0; score=0; renderLevel();});
-document.addEventListener('keydown',(e)=>{if(e.key==='ArrowLeft') prevBtn.click(); if(e.key==='ArrowRight') nextBtn.click();});
-
-renderLevel();
-</script>
+    </script>
 </body>
+
 </html>

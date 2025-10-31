@@ -15,8 +15,8 @@
 <meta property="og:title" content="Emoji Reaction Game – Fun Brain Challenge">
 <meta property="og:description" content="Click the right emoji before time runs out! Test your reaction skills in this mobile-friendly Emoji Reaction Game.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://yourdomain.com/emoji-game-thumbnail.png">
-<meta property="og:url" content="https://yourdomain.com/emoji-reaction-game">
+<meta property="og:image" content="https://play-zone.games/emoji-game-thumbnail.png">
+<meta property="og:url" content="https://play-zone.games/emoji-reaction-game">
 
 <style>
 body {
@@ -47,31 +47,32 @@ h1 {
   color: #fff;
   font-weight: bold;
   margin-bottom: 10px;
-  font-size: 18px;
+  font-size: 24px;
   text-shadow:1px 1px 3px rgba(0,0,0,0.3);
 }
 #emoji-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
-  max-width: 400px;
+  gap: 18px;
+  max-width: 500px;
+  margin-top: 10px;
 }
 .emoji {
-  font-size: 48px;
+  font-size: 70px;
   cursor: pointer;
   transition: transform 0.1s ease;
 }
 .emoji:hover {
-  transform: scale(1.2);
+  transform: scale(1.25);
 }
 #message {
   color: #fff;
   font-weight: bold;
-  margin-top: 10px;
-  font-size: 18px;
+  margin-top: 20px;
+  font-size: 38px;
   text-align: center;
-  min-height: 20px;
+  min-height: 30px;
 }
 #timer {
   margin-top: 8px;
@@ -97,13 +98,13 @@ button:hover {
 
 /* Mobile responsiveness */
 @media (max-width: 768px){
-  .emoji { font-size: 36px; }
+  .emoji { font-size: 55px; }
   h1 { font-size: 1.6rem; }
   .stats, #message, #timer { font-size: 16px; }
   button { font-size: 0.9rem; padding: 8px 14px; }
 }
 @media (max-width: 480px){
-  .emoji { font-size: 28px; }
+  .emoji { font-size: 45px; }
   h1 { font-size: 1.4rem; }
   .stats, #message, #timer { font-size: 14px; }
   button { font-size: 0.8rem; padding: 6px 12px; }
@@ -121,6 +122,14 @@ button:hover {
 <div id="message"></div>
 <button id="startBtn">Start Game</button>
 
+<!-- 🔊 Audio feedback -->
+<audio id="correctSound">
+  <source src="level-complete-394515.mp3" type="audio/mpeg">
+</audio>
+<audio id="wrongSound">
+  <source src="wrong-buzz.mp3" type="audio/mpeg">
+</audio>
+
 <script>
 const emojis = ["🐶","🐱","🦁","🐼","🐸","🐵","🐔","🦊","🐰","🐷","🐨","🐯","🐧","🐢","🐙","🦄","🍎","🍌","🍇","🍓","⚽","🏀","🎾","🎲"];
 let targetEmoji = "";
@@ -136,6 +145,11 @@ const scoreEl = document.getElementById('score');
 const levelEl = document.getElementById('level');
 const timerEl = document.getElementById('timeLeft');
 const startBtn = document.getElementById('startBtn');
+
+const correctSound = document.getElementById('correctSound');
+const wrongSound = document.getElementById('wrongSound');
+correctSound.volume = 0.8;
+wrongSound.volume = 0.7;
 
 function startGame(){
   startBtn.style.display = 'none';
@@ -160,7 +174,7 @@ function nextRound(){
 
   const shuffled = shuffle(emojis).slice(0, maxEmojis);
   targetEmoji = shuffled[Math.floor(Math.random()*shuffled.length)];
-  message.textContent = `Click this emoji: ${targetEmoji}`;
+  message.textContent = `👉 Tap this emoji: ${targetEmoji}`;
 
   shuffled.forEach(e => {
     const span = document.createElement('span');
@@ -175,16 +189,21 @@ function nextRound(){
 
 function checkClick(e){
   if(e === targetEmoji){
+    correctSound.currentTime = 0;
+    correctSound.play();
     score++;
+    message.textContent = "✅ Great job!";
     if(score % 3 === 0){
       level++;
       maxEmojis = Math.min(maxEmojis+1, 10);
       roundTime = Math.max(2, roundTime - 0.5);
     }
     updateStats();
-    nextRound();
+    setTimeout(nextRound, 500);
   } else {
-    message.textContent = `❌ Wrong! Try again!`;
+    wrongSound.currentTime = 0;
+    wrongSound.play();
+    message.textContent = `❌ Oops! Try again!`;
   }
 }
 
@@ -200,7 +219,7 @@ function startCountdown(){
     timerEl.textContent = time.toFixed(1);
     if(time <= 0){
       clearInterval(countdown);
-      message.textContent = `⏰ Time's up! Game Over! Score: ${score}`;
+      message.textContent = `⏰ Time's up! Game Over! Final Score: ${score}`;
       container.innerHTML = '';
       startBtn.style.display = 'inline-block';
     }

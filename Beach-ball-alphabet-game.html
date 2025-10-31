@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6306028737571143"
-     crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Alphabet Fishing Game – Fun Word Puzzle</title>
 
   <!-- ✅ SEO -->
@@ -13,19 +13,6 @@
   <meta name="author" content="Alphabet Fun Studio" />
   <meta name="robots" content="index, follow" />
 
-  <!-- ✅ Open Graph -->
-  <meta property="og:title" content="Alphabet Fishing Game – Fun Word Puzzle" />
-  <meta property="og:description" content="Catch letters, complete words, and level up in this educational fishing game for kids and adults!" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://yourwebsite.com/alphabet-fishing" />
-  <meta property="og:image" content="https://yourwebsite.com/images/preview.jpg" />
-
-  <!-- ✅ Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Alphabet Fishing Game – Fun Word Puzzle" />
-  <meta name="twitter:description" content="Play a fun and interactive word game. Catch letters, complete words, and enjoy learning!" />
-  <meta name="twitter:image" content="https://yourwebsite.com/images/preview.jpg" />
-
   <style>
     body {
       margin: 0;
@@ -33,36 +20,52 @@
       font-family: 'Comic Sans MS', cursive, sans-serif;
       background: linear-gradient(135deg, #ff6ec7, #87f1ff);
       text-align: center;
-      overflow-x: hidden;
+      overflow: hidden;
+      user-select: none;
     }
 
     h1 {
       color: #fff;
       text-shadow: 2px 2px #333;
-      margin: 15px 0;
+      font-size: 2.2em;
+      margin: 12px 0;
+      font-weight: bold;
+    }
+
+    #infoPanel {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
     }
 
     #level, #score, #hint {
-      font-size: 1.2em;
+      font-size: 1.1em;
       font-weight: bold;
       color: #222;
-      margin: 8px;
+      background: rgba(255,255,255,0.7);
+      padding: 6px 12px;
+      border-radius: 8px;
     }
 
     #wordDisplay {
       font-size: 2em;
       font-weight: bold;
       letter-spacing: 10px;
+      color: #fff;
+      text-shadow: 1px 1px #333;
       margin: 15px 0;
     }
 
     #gameArea {
       width: 100%;
-      height: 400px;
+      height: 50vh;
       position: relative;
       background: #b3ecff;
       border-top: 5px solid #0077b6;
       overflow: hidden;
+      border-radius: 10px;
     }
 
     .jello {
@@ -77,32 +80,31 @@
       justify-content: center;
       cursor: pointer;
       box-shadow: 0 5px 12px rgba(0,0,0,0.3);
-      transition: transform 0.2s;
+      transition: transform 0.2s ease;
     }
 
-    .jello:hover {
+    .jello:active {
       transform: scale(1.2);
       background: #ff3385;
     }
 
-    /* 📱 Mobile Friendly Adjustments */
+    /* 📱 Responsive Design */
     @media (max-width: 768px) {
-      h1 { font-size: 1.8em; margin-bottom: 8px; }
-      #level, #score, #hint { font-size: 1em; }
+      h1 { font-size: 1.8em; }
       #wordDisplay { font-size: 1.5em; letter-spacing: 6px; }
-      #gameArea { height: 300px; }
-      .jello { width: 65px; height: 65px; font-size: 1.4em; }
+      #gameArea { height: 45vh; }
+      .jello { width: 70px; height: 70px; font-size: 1.5em; }
     }
 
     @media (max-width: 480px) {
-      body { padding: 10px; }
-      h1 { font-size: 1.5em; }
-      #wordDisplay { font-size: 1.3em; letter-spacing: 4px; }
-      #gameArea { height: 250px; }
-      .jello { width: 55px; height: 55px; font-size: 1.2em; }
+      h1 { font-size: 1.6em; margin: 8px 0; }
+      #wordDisplay { font-size: 1.2em; letter-spacing: 4px; }
+      #gameArea { height: 40vh; }
+      .jello { width: 60px; height: 60px; font-size: 1.2em; }
+      #level, #score, #hint { font-size: 0.9em; padding: 4px 8px; }
     }
 
-    /* ✅ Reset Button Always Accessible */
+    /* ✅ Reset Button */
     #resetBtn {
       position: fixed;
       bottom: 15px;
@@ -111,7 +113,7 @@
       background: #ff3c7d;
       color: white;
       border: none;
-      padding: 10px 18px;
+      padding: 10px 20px;
       border-radius: 12px;
       font-size: 1.1em;
       font-weight: bold;
@@ -120,27 +122,29 @@
       transition: background 0.3s;
       z-index: 999;
     }
+
     #resetBtn:hover { background: #e02b6f; }
   </style>
 </head>
 <body>
-  <h1>🎣 Alphabet Fishing Game 🎣</h1>
-  <div id="level">Level: 1</div>
-  <div id="score">Score: 0</div>
-  <div id="hint">Hint: Catch the letters in order! <span id="hintWord"></span></div>
+  <h1>🎣 <b>Alphabet Fishing Game</b> 🎣</h1>
+  
+  <div id="infoPanel">
+    <div id="level"><b>Level:</b> 1</div>
+    <div id="score"><b>Score:</b> 0</div>
+    <div id="hint"><b>Hint:</b> Catch the letters in order!<br/> <span id="hintWord"></span></div>
+  </div>
+
   <div id="wordDisplay">_ _ _ _</div>
 
   <div id="gameArea"></div>
 
-  <button id="resetBtn">🔄 Reset Game</button>
+  <button id="resetBtn">🔄 <b>Reset Game</b></button>
 
   <script>
-    const words = ["APPLE", "BOAT", "GAME", "PLAY", "WORD", "FUN", "KITE", "LION", "TREE", "MOON", "SUN", "BAT", "BALL", "TABLE", "BOY", "FISH", "CAT", "DOG", "ELEPHANT", "HORSE", "FOX", "GRAPEs", "FLOWER", "LAPTOP", "MOBILE", "DOOR","HAND", "EYE"];
-    let currentWordIndex = 0;
+    const words = ["APPLE", "BOAT", "GAME", "PLAY", "WORD", "FUN", "KITE", "LION", "TREE", "MOON", "SUN", "BAT", "BALL", "TABLE", "BOY", "FISH", "CAT", "DOG", "ELEPHANT", "HORSE", "FOX", "GRAPE", "FLOWER", "LAPTOP", "MOBILE", "DOOR","HAND", "EYE"];
+    let currentWordIndex = 0, progress = 0, score = 0, level = 1;
     let currentWord = words[currentWordIndex];
-    let progress = 0;
-    let score = 0;
-    let level = 1;
 
     const gameArea = document.getElementById("gameArea");
     const wordDisplay = document.getElementById("wordDisplay");
@@ -149,12 +153,11 @@
     const resetBtn = document.getElementById("resetBtn");
 
     function updateWordDisplay() {
-      let display = "";
-      for (let i = 0; i < currentWord.length; i++) {
-        display += i < progress ? currentWord[i] + " " : "_ ";
-      }
-      wordDisplay.textContent = display.trim();
-      document.getElementById("hintWord").innerHTML = currentWord;
+      wordDisplay.textContent = currentWord
+        .split("")
+        .map((ch, i) => (i < progress ? ch : "_"))
+        .join(" ");
+      document.getElementById("hintWord").textContent = currentWord;
     }
 
     function createJello(letter, correct) {
@@ -162,10 +165,10 @@
       jello.classList.add("jello");
       jello.textContent = letter;
 
-      jello.style.width = "70px";
-      jello.style.height = "70px";
-      jello.style.top = Math.random() * (gameArea.clientHeight - 70) + "px";
-      jello.style.left = Math.random() * (gameArea.clientWidth - 70) + "px";
+      const size = window.innerWidth < 480 ? 60 : 70;
+      jello.style.width = jello.style.height = size + "px";
+      jello.style.top = Math.random() * (gameArea.clientHeight - size) + "px";
+      jello.style.left = Math.random() * (gameArea.clientWidth - size) + "px";
 
       gameArea.appendChild(jello);
 
@@ -173,20 +176,20 @@
         if (correct && letter === currentWord[progress]) {
           progress++;
           score += 10;
+          scoreDisplay.innerHTML = "<b>Score:</b> " + score;
           updateWordDisplay();
-          scoreDisplay.textContent = "Score: " + score;
 
           if (progress === currentWord.length) {
             currentWordIndex = (currentWordIndex + 1) % words.length;
             currentWord = words[currentWordIndex];
             progress = 0;
             level++;
-            levelDisplay.textContent = "Level: " + level;
+            levelDisplay.innerHTML = "<b>Level:</b> " + level;
             updateWordDisplay();
           }
         } else {
           score = Math.max(0, score - 5);
-          scoreDisplay.textContent = "Score: " + score;
+          scoreDisplay.innerHTML = "<b>Score:</b> " + score;
         }
         jello.remove();
       });
@@ -197,7 +200,6 @@
     function spawnJellos() {
       const correctLetter = currentWord[progress];
       createJello(correctLetter, true);
-
       for (let i = 0; i < 2; i++) {
         const randomLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
         createJello(randomLetter, false);
@@ -208,13 +210,10 @@
     updateWordDisplay();
 
     resetBtn.addEventListener("click", () => {
-      score = 0;
-      level = 1;
-      currentWordIndex = 0;
+      score = 0; level = 1; currentWordIndex = 0; progress = 0;
       currentWord = words[currentWordIndex];
-      progress = 0;
-      scoreDisplay.textContent = "Score: 0";
-      levelDisplay.textContent = "Level: 1";
+      scoreDisplay.innerHTML = "<b>Score:</b> 0";
+      levelDisplay.innerHTML = "<b>Level:</b> 1";
       updateWordDisplay();
     });
   </script>
