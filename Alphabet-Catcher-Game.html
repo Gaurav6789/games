@@ -14,10 +14,11 @@ body {
     margin: 0;
     overflow: hidden;
     font-family: Arial, sans-serif;
+    background:linear-gradient(to bottom, #a8e6ff, #ffffff, #ffd6e0) !important ;
 }
 #game {
     width: 100vw;
-    height: 100vh;
+    height: 89vh;
     position: relative;
     overflow: hidden;
     background: linear-gradient(to bottom, #a8e6ff, #ffffff, #ffd6e0);
@@ -99,7 +100,7 @@ let fallSpeed = 2;
 let spawnCount = 0;
 
 let basketX = window.innerWidth / 2 - basket.offsetWidth/2;
-basket.style.left = basketX + "px";
+// basket.style.left = basketX + "px";
 
 function spawnLetter() {
     if (document.querySelectorAll(".letter").length >= 2) return;
